@@ -8,7 +8,7 @@ def index():
     return render_template("index.html", login=False)
 
 @app.route("/forum")
-def courses():
+def forum():
     return render_template("forum.html")
 
 @app.route("/register")
