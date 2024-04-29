@@ -7,9 +7,9 @@ from flask import render_template
 def index():
     return render_template("index.html", login=False)
 
-@app.route("/courses")
+@app.route("/forum")
 def courses():
-    return render_template("courses.html")
+    return render_template("forum.html")
 
 @app.route("/register")
 def register():
