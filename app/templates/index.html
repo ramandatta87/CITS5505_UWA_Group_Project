@@ -1,0 +1,246 @@
+{% extends "includes/layout.html" %}
+
+{% block content %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CSSE DevConnect - Where Developers Learn, Share, &amp; Build Careers</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="homepage.css">
+</head>
+
+<body>
+    
+    <header>
+        <div class="nav-container">
+            <nav>
+                <div class="nav-brand">
+                    <a href="#" class="nav-icon">
+                        <i class="fab fa-dev-connect"></i>
+                        <div class="nav-icon-text">CSSE <span class="nav-bold-text">DevConnect</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="nav-base-links">
+                    <ul>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Study</a></li>
+                        <li><a href="#">Career</a></li>
+                    </ul>
+                </div>
+                <div class="nav-search">
+                    <div class="search-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="" placeholder="Search...">
+                    </div>
+                    <div class="search-hints">
+                        <div class="search-arrow-up"></div>
+                        <div class="search-hint-body">
+                            <div class="hints-grid-column">
+                                <div class="hint-text"><span>[tag] </span> search within a tag</div>
+                                <div class="hint-text"><span>user:1234 </span>  search by author</div>
+                                <div class="hint-text"><span>"words here"</span> exact phrase </div>
+                            </div>
+                            <div class="hints-grid-column">
+                                <div class="hint-text"><span>answers:0</span> unanswered questions</div>
+                                <div class="hint-text"><span> score:3  </span> posts with a 3+ score</div>
+                                <div class="hint-text"><span>isaccepted:yes </span> search within status</div>
+                            </div>
+                        </div>
+                        <div class="search-hint-footer">
+                            <a href="#" class="btn">Ask a question</a>
+                            <a href="#" class="search-help">Search help</a>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="nav-right-buttons">
+                    <div class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </div>
+
+
+                    <a href="#" class="btn btn-login">Sign in</a>
+                    <a href="#" class="btn btn-register">Sign up</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">We <span>CSSE</span> people who help</h1>
+            <p class="hero-paragraph">
+                We help you get answers to your toughest coding questions, share knowledge with your coworkers, and find your achievements here by joining our community.
+            </p>
+            <div class="hero-options">
+                <a href="#" class="btn btn-developers">Unit Questions</a>
+                <a href="#" class="btn btn-businesses">Career preparation</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="questions">
+        <div class="container">
+        <div class="questions-content">
+            <div class="questions-header">
+                <h3 class="question-title">Efficient search on CSSE DevConnect</h3>
+            </div>
+            <div class="questions-body">
+                <div class="questions-body-items">
+                    <div class="questions-body-item" data-id="0">
+                        <img src="https://cdn.sstatic.net/Img/home/ask-a-question.svg?v=f4f2050b0297" alt="" class="question-item-icon">
+                        <div class="question-item-text">Ask a question</div>
+                        <div class="question-arrow-right"></div>
+                    </div>
+                    <div class="questions-body-item"  data-id="1">
+                        <img src="https://cdn.sstatic.net/Img/home/votes.svg?v=748a8f48a8e2" alt="" class="question-item-icon">
+                        <div class="question-item-text">Vote on everything</div>
+                        <div class="question-arrow-right"></div>
+                    </div >
+                    <div class="questions-body-item"  data-id="2">
+                        <img src="https://cdn.sstatic.net/Img/home/answer.svg?v=4cd8048a676c" alt="" class="question-item-icon">
+                        <div class="question-item-text">Answer questions</div>
+                        <div class="question-arrow-right"></div>
+                    </div>
+                </div>
+                <div class="questions-body-item-content">
+                    <img src="https://cdn.sstatic.net/Img/home/illo-feats-vote.svg?v=9d2eb0efdc17" alt="" class="question-item-content-img">
+                    <h4 class="question-item-content-text">
+                        Accept the answer which solved your problem to let others benefit from the valuable information.
+                    </h4>
+                    <a href="#" class="btn btn-orange question-item-content-btn">Create an account</a>
+                </div>
+                <div class="questions-body-items">
+                    <div class="questions-body-item"  data-id="3">
+                        <img src="https://cdn.sstatic.net/Img/home/tags.svg?v=913379eb09eb" alt="" class="question-item-icon">
+                        <div class="question-item-text">Tag your question</div>
+                        <div class="question-arrow-left"></div>
+                    </div>
+                    <div class="questions-body-item"  data-id="4">
+                        <img src="https://cdn.sstatic.net/Img/home/accept.svg?v=27d5be078970" alt="" class="question-item-icon">
+                        <div class="question-item-text">Accept a answer</div>
+                        <div class="question-arrow-left"></div>
+                    </div>
+                    <div class="questions-body-item"  data-id="5">
+                        <img src="https://cdn.sstatic.net/Img/home/get-recognized.svg?v=3b339d9aa10c" alt="" class="question-item-icon">
+                        <div class="question-item-text">Get recognized</div>
+                        <div class="question-arrow-left"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <section class="for-developers">
+    <div class="container">
+        <div class="section-head">
+            <h2 class="section-title">For CSSE Students, by CSSE Students
+            </h2>
+            <div class="section-line"></div>
+            <p class="section-description">CSSE DevConnect is an open community for UWA CSSE Students. We help you get answers to your questions, share knowledge with your coworkers in private, and find your next dream job.
+            </p>
+        </div>
+        <div class="options">
+            <div class="option">
+                <div class="option-icon">
+                    <img src="https://cdn.sstatic.net/Img/home/public-qa.svg?v=d82acaa7df9f" alt="Public Q & A">
+                </div>
+                <div class="option-title">
+                    Public Q&A
+                </div>
+                <div class="option-description">
+                    Get customized answers to CSSE units questions and give back by sharing your knowledge with others.
+                    <a href="#">Sign up</a> for an account.
+                </div>
+                <div class="option-button">
+                    <a href="#" class="option-link btn btn-dark-blue">
+                        Browse questions
+                    </a>
+                </div>
+            </div>
+            <div class="option">
+                <div class="option-icon">
+                    <img src="https://cdn.sstatic.net/Img/home/private-qa.svg?v=2c1de180b6d7" alt="Private Q & A">
+                </div>
+                <div class="option-title">
+                    Public Q&A
+                </div>
+                <div class="option-description">
+                    Level up with CSSE DevConnect while you study. Share knowledge privately with your coworkers using our flagship Q&A engine.
+                </div>
+                <div class="option-button">
+                    <a href="#" class="option-link btn btn-orange">
+                        Try for free
+                    </a>
+                </div>
+            </div>
+            <div class="option">
+                <div class="option-icon">
+                    <img src="https://cdn.sstatic.net/Img/home/jobs.svg?v=931d6c0863ee" alt="Browse jobs">
+                </div>
+                <div class="option-title">
+                    Public Q&A
+                </div>
+                <div class="option-description">
+                    Help you prepare for your next job interview with our coding interview questions.
+
+
+                </div>
+                <div class="option-button">
+                    <a href="#" class="option-link btn btn-dark-blue">
+                        Prepare for career
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </section>
+
+
+    <footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-icon">
+                <i class="fab fa-dev-connect"></i>
+            </div>
+            
+            <div class="footer-another-links">
+                <div class="social-media">
+                    <ul>
+                        <li>
+                            <a href="#">Blog</a>
+                        </li>
+                        <li>
+                            <a href="#">Facebook</a>
+                        </li>
+                        <li>
+                            <a href="#">Twitter</a>
+                        </li>
+                        <li>
+                            <a href="#">LinkedIn</a>
+                        </li>
+                        <li>
+                            <a href="#">Instagram</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="copyright">
+                    <p>site design / logo © 2024 CSSE DevConnect; </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </footer>
+
+    <script src="main.js"></script>
+</body>
+</html>
+
+{% endblock %}

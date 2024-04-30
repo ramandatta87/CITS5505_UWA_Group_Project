@@ -1,7 +1,20 @@
 # CITS5505_Group_Project: CSSE DevConnect
 
 ## Overview:
+<<<<<<< Updated upstream
 This web application - CSSE DevConnect is primarily designed as a learning Q&A platform for students in the UWA, CSSE (Computer Science and Software Engineering) college. Currently, the main platform used by everyone to search for answers to computer-related questions is Stack Overflow. However, this application is too large and general, which results in very low search efficiency, and often the answers are not suitable and cannot solve the problem. Additionally, although each unit has relevant Q&A platforms on Teams or LMS, they are mostly very scattered, brief, lacking categorization and tagging, and students can only see very recent ones, with past records being invisible. Therefore, this application addresses the issues that the above two platforms cannot simultaneously address and can provide questions and answers related to courses under the CSSE college.
+=======
+This web application is primarily designed as a learning Q&A platform for students in the UWA, CSSE (Computer Science and Software Engineering) college. Currently, the main platform used by everyone to search for answers to computer-related questions is something Stack Overflow. However, this application is too large and general, which results in very low search efficiency, and often the answers are not suitable and cannot solve the problem. Additionally, although each unit has relevant Q&A platforms on Teams or LMS, they are mostly very scattered, brief, lacking categorization and tagging, and students can only see very recent ones, with past records being invisible. Therefore, this application addresses the issues that the above two platforms cannot simultaneously address and can provide questions and answers related to courses under the CSSE college. Besides, they can also exchange the experiences about career preparation.
+
+
+## Group Members:
+| UWA ID     | Name         | Github Username |
+|------------|--------------|-----------------|
+| 23737198   | Jinsen Lou       | Jinsen_Lou |
+| 22917174   | Raman Datta      | ramandatta87 |
+| 23242469   | Qian Zhang       |  |
+| 23364248   | Hari Kapoor      |  |
+>>>>>>> Stashed changes
 
 
 ## Features:
