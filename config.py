@@ -1,5 +1,5 @@
 import os
 
 class Config(object):
-    SECRET_KY = "Drmhze6EPcv0fN_81Bj-nA"
+    SECRET_KEY = "Drmhze6EPcv0fN_81Bj-nA"
     
