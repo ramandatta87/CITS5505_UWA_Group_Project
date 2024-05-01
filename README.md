@@ -2,15 +2,22 @@
 This project is to develop a web application to create a forms for Computer programming languag
 
 ## Overview:
-This web application is primarily designed as a learning Q&A platform for students in the UWA, CSSE (Computer Science and Software Engineering) college. Currently, the main platform used by everyone to search for answers to computer-related questions is Stack Overflow. However, this application is too large and general, which results in very low search efficiency, and often the answers are not suitable and cannot solve the problem. Additionally, although each unit has relevant Q&A platforms on Teams or LMS, they are mostly very scattered, brief, lacking categorization and tagging, and students can only see very recent ones, with past records being invisible. Therefore, this application addresses the issues that the above two platforms cannot simultaneously address and can provide questions and answers related to courses under the CSSE college.
+This web application is primarily designed as a learning Q&A and career preparation platform for students in the UWA, CSSE (Computer Science and Software Engineering) college. Currently, the main platform used by everyone to search for answers to computer-related questions is something like Stack Overflow. However, this application is too large and general, which results in very low search efficiency, and often the answers are not suitable and cannot solve the problem. Additionally, although each unit has relevant Q&A platforms on Teams or LMS, they are mostly very scattered, brief, lacking categorization and tagging, and students can only see very recent ones, with past records being invisible. Therefore, this application addresses the issues that the above two platforms cannot simultaneously address and can provide questions and answers related to courses under the CSSE college.Besides, they can also exchange the experiences about career preparation.
 
 
 ## Features:
 - **Technical Forum**: Seamlessly search for various topic on many problems faced by students while working on computer programming.
 - **Comprehensive Database**: Access a database of technical discussion along with the solution from various members.
-- **Interactive Visualizations**: Asthetic Visualization .
-- **Contribute to Forum**: Contribute to work by logging in to forum and get the upvote.
+- **Interactive Visualizations**: Asthetic Visualization.
+- **Contribute to Forum**: Contribute to work by logging in to forum and get the update.
 
+## Group Members:
+| UWA ID     | Name         | Github Username |
+|------------|--------------|-----------------|
+| 23737198   | Jinsen Lou       | Jinsen_Lou |
+| 22917174   | Raman Datta      | ramandatta87 |
+| 23242469   | Qian Zhang       |  |
+| 23364248   | Hari Kapoor      |  |
 
 ### 1. User Account Management
 Allow users to create accounts, log in, and log out, manage their profiles, and set preferences.
@@ -32,7 +39,6 @@ Provide users with a reputation or badge system based on their contributions (su
 Provide tools and features such as reporting, banning, deleting, etc., to manage inappropriate behavior and content and maintain community order.
 ### 10. Community Dashboard
 Provide a dashboard or homepage that displays the most popular, recent, and unanswered questions, as well as other relevant information to help users navigate the platform.
-
 ### 11. Notification and Alerts
 Allow users to receive notifications about their questions, answers, and comments to stay informed about relevant activity.
 
