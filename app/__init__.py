@@ -1,32 +1,31 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, String, Float
-from .config import Config 
-from .models import db, User  # Import db here from models
 from flask_migrate import Migrate
+from .config import Config
 
-
-# Initialize the SQLAlchemy instance without passing the app
-#db = SQLAlchemy()
+# Initialize SQLAlchemy and migration engine
+db = SQLAlchemy()
 migrate = Migrate()
+
 def create_app(config_class=Config):
+    # Create Flask app instance
     app = Flask(__name__)
-    app.config.from_object(config_class)  # Load configuration
 
-    db.init_app(app)  # Link the SQLAlchemy instance to the Flask app
+    #Using Configuration Class
+    app.config.from_object(config_class)
 
+    # Initialize database and migration engine with the app
+    db.init_app(app)
     migrate.init_app(app, db)
 
- 
-    # Importing models here ensures they're aware of the db instance
-    from .models import User
+    # Import and register blueprints for different parts of the application
+    from app.controllers.auth_controller import auth
+    from app.controllers.main_controller import main
 
-    # Register routes
-    from .routes import init_routes
-    init_routes(app)  # Assuming routes are set up to accept an app instance
+    # Register 'auth' blueprint with URL prefix '/auth'
+    app.register_blueprint(auth, url_prefix='/auth')
 
-    # Optional: Create database tables within an app context
-    with app.app_context():
-        db.create_all()
+    # Register 'main' blueprint without URL prefix
+    app.register_blueprint(main)
 
     return app

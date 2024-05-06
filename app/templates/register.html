@@ -5,7 +5,7 @@
 
 <div class="container">
     <!-- Ensure the form action matches your Flask route for registration -->
-    <form name="register" action="{{ url_for('register') }}" method="post">
+    <form name="register" action="{{ url_for('auth.register') }}" method="post">
         <!-- Flask-WTF CSRF token -->
         {{ form.csrf_token }}
 
