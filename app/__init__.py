@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_mail import Mail,Message  # Importing flask_email module
+from flask_mail import Mail  # Importing flask_email module
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from .config import Config
@@ -8,7 +8,7 @@ from .config import Config
 # Initialize SQLAlchemy and migration engine
 db = SQLAlchemy()
 migrate = Migrate()
-
+mail = Mail()
 def create_app(config_class=Config):
     # Create Flask app instance
     app = Flask(__name__)
@@ -20,8 +20,8 @@ def create_app(config_class=Config):
     db.init_app(app)
     migrate.init_app(app, db)
 
-    #Initializing Mail Parameters
-    mail = Mail(app)
+    # Initialize Mail with the app
+    mail.init_app(app)
 
     # Import and register blueprints for different parts of the application
     from app.controllers.auth_controller import auth

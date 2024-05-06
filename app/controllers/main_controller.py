@@ -1,4 +1,7 @@
 from flask import Blueprint, render_template
+from flask_mail import  Message
+from app import mail
+import datetime         #Importing for mail date & time
 
 # Define a Blueprint named 'main' for organizing routes and views
 main = Blueprint('main', __name__)
@@ -16,3 +19,16 @@ def index():
 @main.route("/forum")
 def forum():
     return render_template("forum.html")
+
+@main.route("/mailcheck")
+def mailcheck():
+    mail_check()
+    return render_template("index.html",login=False)
+
+def mail_check():
+
+    # ct stores current time
+    ct = datetime.datetime.now() 
+    msg = Message("Hello from Flask", sender="cssedevconnect@gmail.com", recipients=["ramandatta87@gmail.com"," loujinsen@hotmail.com"])
+    msg.body = f"This is a test email sent from Flask using Gmail. Mail Generated Time : {ct}"
+    mail.send(msg)
