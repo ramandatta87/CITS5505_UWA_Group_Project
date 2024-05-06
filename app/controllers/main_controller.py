@@ -21,11 +21,11 @@ def forum():
     return render_template("forum.html")
 
 @main.route("/mailcheck")
-def mailcheck():
+def mailcheck():            #Sample route for sending email from flask
     mail_check()
     return render_template("index.html",login=False)
 
-def mail_check():
+def mail_check(): # Sample function to test email
 
     # ct stores current time
     ct = datetime.datetime.now() 
