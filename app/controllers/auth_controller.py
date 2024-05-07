@@ -2,7 +2,7 @@
 from datetime import datetime
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from app.models.user import User    # Importing the User model
-from app.forms import RegisterForm  # Importing the RegisterForm
+from app.forms import RegisterForm, LoginForm, ForgetPasswordForm  # Importing the RegisterForm
 from app import db                  # Importing the database instance
 
 
@@ -49,3 +49,12 @@ def register():
 @auth.route("/login")
 def login():
     return render_template("login.html")
+
+@auth.route('/forget_password', methods=['GET', 'POST'])
+def forget_password():
+    form = ForgetPasswordForm()
+    if form.validate_on_submit():
+        # Send reset password instructions
+        flash('Please check your email for reset password instructions.')
+        return redirect(url_for('auth.login'))
+    return render_template('forget_password.html', form=form)
