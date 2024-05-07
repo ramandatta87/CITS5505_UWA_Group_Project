@@ -1,5 +1,6 @@
 # Import necessary modules and functions(for password hashing and salting)
 from app import db
+from datetime import datetime
 from werkzeug.security import generate_password_hash
 
 #Defining the User Model Class

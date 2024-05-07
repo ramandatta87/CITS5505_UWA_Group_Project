@@ -1,4 +1,5 @@
 # Import necessary modules and functions
+from datetime import datetime
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from app.models.user import User    # Importing the User model
 from app.forms import RegisterForm  # Importing the RegisterForm
@@ -12,20 +13,20 @@ auth = Blueprint('auth', __name__)
 @auth.route("/register", methods=['GET', 'POST'])
 def register():
     form = RegisterForm(request.form)
-    # Check if the request method is POST and the form data is valid
-
     if request.method == 'POST' and form.validate():
         # Check if the user already exists based on email or UWA ID
         existing_user = User.query.filter((User.email == form.email.data) | (User.uwa_id == form.uwa_id.data)).first()
-        if existing_user is None:   # If user does not exist
-            
-            # Create a new user instance with form data
+        if existing_user is None:  # If user does not exist
+            # Create a new user instance with form data, including defaults for new fields
             new_user = User(
                 first_name=form.first_name.data,
                 last_name=form.last_name.data,
                 uwa_id=form.uwa_id.data,
                 email=form.email.data,
-                major=form.major.data
+                major=form.major.data,
+                is_disabled=False,  # Default value as specified
+                timestamp=datetime.utcnow(),  # Current UTC time as timestamp
+                role='user'  # Default role
             )
 
             # Set the password for the new user
@@ -38,7 +39,7 @@ def register():
                 return redirect(url_for('auth.login'))
             except Exception as e:
                 db.session.rollback()
-                flash("Failed to register the user.", "error")
+                flash(f"Failed to register the user due to {e}", "error")
         else:
             flash('Email or UWA ID already exists.', 'error')
     return render_template("register.html", form=form)

@@ -9,4 +9,6 @@ class RegisterForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired()])
     major = StringField('Major', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
+    c_password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Register')
+    clear_form = SubmitField('Clear')
