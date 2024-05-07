@@ -12,3 +12,13 @@ class RegisterForm(FlaskForm):
     c_password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Register')
     clear_form = SubmitField('Clear')
+
+class LoginForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email(message='Enter a valid email.')])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Login')
+
+class ForgetPasswordForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email(message='Enter a valid email.')])
+    uwa_id = StringField('UWA ID', validators=[DataRequired(message='Enter UWA ID.')])
+    submit = SubmitField('Send Reset Link')
