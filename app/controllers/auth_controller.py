@@ -74,3 +74,29 @@ def forget_password():
         flash('Please check your email for reset password instructions.')
         return redirect(url_for('auth.login'))
     return render_template('forget_password.html', form=form)
+
+@auth.route('/profile')
+def profile():
+    # Ensure the user is logged in
+    if 'logged_in' in session and session['logged_in']:
+        # Logic to show user profile
+        return render_template('profile.html')
+    else:
+        flash("Please log in to view this page.", "warning")
+        return redirect(url_for('auth.login'))
+    
+@auth.route('/change-password', methods=['GET', 'POST'])
+def change_password():
+    if not session.get('logged_in'):
+        flash("Please log in to access this page.", "info")
+        return redirect(url_for('auth.login'))
+    
+    form = ChangePasswordForm()  # Assuming you have a form for changing password
+    if form.validate_on_submit():
+        # Assuming you have access to current_user or similar
+        current_user.password = generate_password_hash(form.new_password.data)
+        db.session.commit()
+        flash('Your password has been updated!', 'success')
+        return redirect(url_for('auth.profile'))
+    
+    return render_template('change_password.html', form=form)
