@@ -12,8 +12,9 @@ main = Blueprint('main', __name__)
 @main.route("/index")
 @main.route("/home")
 def index():
-    # Render the index.html template with login set to False
-    return render_template("index.html", login=False)
+    # Check if 'logged_in' is in session and is True
+    login_status = session.get('logged_in', False)
+    return render_template("index.html", login=login_status)
 
 # Route decorator to map the URL "/forum" to the forum function
 @main.route("/forum")
@@ -29,6 +30,6 @@ def mail_check(): # Sample function to test email
 
     # ct stores current time
     ct = datetime.datetime.now() 
-    msg = Message("Hello from Flask", sender="cssedevconnect@gmail.com", recipients=["ramandatta87@gmail.com"," loujinsen@hotmail.com"])
+    msg = Message("Hello from Flask", sender="cssedevconnect@gmail.com", recipients=["ramandatta87@gmail.com"])
     msg.body = f"This is a test email sent from Flask using Gmail. Mail Generated Time : {ct}"
     mail.send(msg)

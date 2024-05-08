@@ -1,24 +1,24 @@
-    {% extends "includes/layout.html" %}
-   
-    {% block content %}
-    <h1>Login</h1>
+{% extends "includes/layout.html" %}
 
-    <div class="row">
-        <div class="col-md-6 offset-md-3">
-            <h3></h3>
-            <form name="login" action="login.php" method="get">
-                <label for="username"><b>Username</b></label>
-                <input type="text" placeholder="Enter Username" name="username" required>
-                <br>
-                <label for="password"><b>Password</b></label>
-                <input type="password" placeholder="Enter Password" name="password" required>
-                <br class="clear">
-                <input class="btn-submit" type="submit" name="submit" value="Login">
-                <input type="reset" value="Reset" /
-            </form>
-            <p class="forgot-password">
-                <a href="{{ url_for('auth.forget_password') }}">Forgot your password?</a>
-            </p>
-        </div>
+{% block content %}
+<h1>Login</h1>
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <form name="login" action="{{ url_for('auth.login') }}" method="post">
+            {{ form.csrf_token }}  <!-- Include CSRF token for security -->
+            <label for="email"><b>Email</b></label>  <!-- Assuming you use email for login -->
+            <input type="email" placeholder="Enter Email" name="email" required>
+            <br>
+            <label for="password"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" name="password" required>
+            <br class="clear">
+            <input class="btn-submit" type="submit" value="Login">
+            <input type="reset" value="Reset">
+        </form>
+        <p class="forgot-password">
+            <a href="{{ url_for('auth.forget_password') }}">Forgot your password?</a>
+        </p>
     </div>
- {% endblock %}
+</div>
+{% endblock %}

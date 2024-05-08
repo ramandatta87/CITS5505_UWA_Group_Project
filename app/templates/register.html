@@ -6,32 +6,31 @@
 <div class="container">
     <!-- Ensure the form action matches your Flask route for registration -->
     <form name="register" action="{{ url_for('auth.register') }}" method="post">
-        <!-- Flask-WTF CSRF token -->
         {{ form.csrf_token }}
+        
+        {{ form.first_name.label }}<br>
+        {{ form.first_name(size=32, class_='form-control', placeholder='Enter First Name') }}<br>
 
-        <label for="first_name"><b>First Name</b></label>
-        <input type="text" placeholder="Enter First Name" name="first_name" required>
-        <br>
-        <label for="last_name"><b>Last Name</b></label>
-        <input type="text" placeholder="Enter Last Name" name="last_name" required>
-        <br>
-        <label for="uwa_id"><b>UWA ID (Student ID)</b></label>
-        <input type="text" placeholder="Enter UWA ID" name="uwa_id" required>
-        <br>
-        <label for="email"><b>Email</b></label>
-        <input type="email" placeholder="Enter Email" name="email" required>
-        <br>
-        <label for="major"><b>Major</b></label>
-        <input type="text" placeholder="Enter Major" name="major" required>
-        <br>
-        <label for="password"><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" name="password" required>
+        {{ form.last_name.label }}<br>
+        {{ form.last_name(size=32, class_='form-control', placeholder='Enter Last Name') }}<br>
 
-        <label for="Confrim password"><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" name="password" required>
-        <br class="clear">
-        <input class="btn-submit" type="submit" value="Register">
-        <input type="reset" value="Reset" />
+        {{ form.uwa_id.label }}<br>
+        {{ form.uwa_id(size=32, class_='form-control', placeholder='Enter UWA ID') }}<br>
+
+        {{ form.email.label }}<br>
+        {{ form.email(size=32, class_='form-control', placeholder='Enter Email') }}<br>
+
+        {{ form.major.label }}<br>
+        {{ form.major(size=32, class_='form-control', placeholder='Enter Major') }}<br>
+
+        {{ form.password.label }}<br>
+        {{ form.password(size=32, class_='form-control', placeholder='Enter Password') }}<br>
+
+        {{ form.confirm_password.label }}<br>
+        {{ form.confirm_password(size=32, class_='form-control', placeholder='Confirm Password') }}<br>
+
+        <input class="btn btn-primary" type="submit" value="Register">
+        <input class="btn btn-default" type="reset" value="Reset" />
     </form>
 </div>
 {% endblock %}

@@ -1,6 +1,7 @@
 # Import necessary modules and functions
 from datetime import datetime
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from werkzeug.security import check_password_hash
+from flask import Blueprint, render_template, request, flash, redirect, url_for, session
 from app.models.user import User    # Importing the User model
 from app.forms import RegisterForm, LoginForm, ForgetPasswordForm  # Importing the RegisterForm
 from app import db                  # Importing the database instance
@@ -46,9 +47,24 @@ def register():
 
 
 # Route decorator to map the URL "/login" to the login function
-@auth.route("/login")
+@auth.route('/login', methods=['GET', 'POST'])
 def login():
-    return render_template("login.html")
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and check_password_hash(user.password_hash, form.password.data):
+            session['logged_in'] = True  # Set session variable to indicate the user is logged in
+            flash('You have been logged in!', 'success')
+            return redirect(url_for('main.index'))  # Assuming 'main' is your Blueprint for index
+        else:
+            flash('Login Unsuccessful. Please check email and password', 'danger')
+    return render_template('login.html', form=form)
+
+@auth.route('/logout')
+def logout():
+    session.pop('logged_in', None)  # Remove 'logged_in' from session
+    flash('You have been logged out.', 'success')
+    return redirect(url_for('main.index'))  # Redirect to the index page
 
 @auth.route('/forget_password', methods=['GET', 'POST'])
 def forget_password():
