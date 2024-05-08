@@ -1,16 +1,34 @@
 <header>
-    <nav>
-        <ul class="nav nav-pills">
-            <li class="nav-item"><a href="{{ url_for('main.index') }}" class="nav-link {{ 'active' if request.path == url_for('main.index') else '' }}">Home</a></li>
-            <li class="nav-item"><a href="{{ url_for('main.forum') }}" class="nav-link {{ 'active' if request.path == url_for('main.forum') else '' }}">Forum Topics</a></li>
-            
-            {% if 'logged_in' in session and session['logged_in'] %}
-                <li class="nav-item"><a href="{{ url_for('auth.logout') }}" class="nav-link">Logout</a></li>
-            {% else %}
-                <li class="nav-item"><a href="{{ url_for('auth.register') }}" class="nav-link {{ 'active' if request.path == url_for('auth.register') else '' }}">Register</a></li>
-                <li class="nav-item"><a href="{{ url_for('auth.login') }}" class="nav-link {{ 'active' if request.path == url_for('auth.login') else '' }}">Login</a></li>
-            {% endif %}
-        </ul>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url_for('main.index') }}">DevConnect</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a href="{{ url_for('main.index') }}" class="nav-link {{ 'active' if request.path == url_for('main.index') else '' }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('main.forum') }}" class="nav-link {{ 'active' if request.path == url_for('main.forum') else '' }}">Forum Topics</a>
+                    </li>
+                    {% if 'logged_in' in session and session['logged_in'] %}
+                        <!-- User dropdown menu -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="{{ session['user_image'] }}" alt="user image" class="rounded-circle" style="width: 30px; height: 30px;">
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <li><a class="dropdown-item" href="{{ url_for('auth.profile') }}">Profile</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('auth.change_password') }}">Change Password</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
     </nav>
-    <hr style="clear:both">
 </header>
