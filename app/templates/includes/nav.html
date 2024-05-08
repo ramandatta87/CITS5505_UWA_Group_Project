@@ -1,11 +1,16 @@
-    <header>
-        <nav>
-            <ul class="nav nav-pills">
-                <li class="nav-item"><a href="{{ url_for('main.index') }}" class="nav-link active">Home</a></li>
-                <li class="nav-item"><a href="{{ url_for('main.forum') }}" class="nav-link">Forum Topics</a></li>
-                <li class="nav-item"><a href="{{ url_for('auth.register') }}" class="nav-link">Register</a></li>
-                <li class="nav-item"><a href="{{ url_for('auth.login') }}" class="nav-link">Login</a></li>
-            </ul>
-        </nav>
-        <hr style="clear:both">
-    </header>
+<header>
+    <nav>
+        <ul class="nav nav-pills">
+            <li class="nav-item"><a href="{{ url_for('main.index') }}" class="nav-link {{ 'active' if request.path == url_for('main.index') else '' }}">Home</a></li>
+            <li class="nav-item"><a href="{{ url_for('main.forum') }}" class="nav-link {{ 'active' if request.path == url_for('main.forum') else '' }}">Forum Topics</a></li>
+            
+            {% if 'logged_in' in session and session['logged_in'] %}
+                <li class="nav-item"><a href="{{ url_for('auth.logout') }}" class="nav-link">Logout</a></li>
+            {% else %}
+                <li class="nav-item"><a href="{{ url_for('auth.register') }}" class="nav-link {{ 'active' if request.path == url_for('auth.register') else '' }}">Register</a></li>
+                <li class="nav-item"><a href="{{ url_for('auth.login') }}" class="nav-link {{ 'active' if request.path == url_for('auth.login') else '' }}">Login</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    <hr style="clear:both">
+</header>

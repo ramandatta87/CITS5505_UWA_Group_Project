@@ -1,24 +1,48 @@
 {% extends "includes/layout.html" %}
 
 {% block content %}
-<h1>Login</h1>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title">Login</h3>
+                </div>
+                <div class="card-body">
+                    <form name="login" action="{{ url_for('auth.login') }}" method="post">
+                        {{ form.csrf_token }}  <!-- CSRF token for security -->
+                        
+                        <div class="form-group">
+                            {{ form.email.label(class_='form-label') }}
+                            {{ form.email(class_='form-control', placeholder='Enter Email') }}
+                            {% if form.email.errors %}
+                                <div class="alert alert-danger">
+                                    {{ form.email.errors[0] }}
+                                </div>
+                            {% endif %}
+                        </div>
 
-<div class="row">
-    <div class="col-md-6 offset-md-3">
-        <form name="login" action="{{ url_for('auth.login') }}" method="post">
-            {{ form.csrf_token }}  <!-- Include CSRF token for security -->
-            <label for="email"><b>Email</b></label>  <!-- Assuming you use email for login -->
-            <input type="email" placeholder="Enter Email" name="email" required>
-            <br>
-            <label for="password"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="password" required>
-            <br class="clear">
-            <input class="btn-submit" type="submit" value="Login">
-            <input type="reset" value="Reset">
-        </form>
-        <p class="forgot-password">
-            <a href="{{ url_for('auth.forget_password') }}">Forgot your password?</a>
-        </p>
+                        <div class="form-group">
+                            {{ form.password.label(class_='form-label') }}
+                            {{ form.password(class_='form-control', placeholder='Enter Password') }}
+                            {% if form.password.errors %}
+                                <div class="alert alert-danger">
+                                    {{ form.password.errors[0] }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Login</button>
+                        <button type="reset" class="btn btn-secondary">Reset</button>
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <p class="forgot-password text-right">
+                        <a href="{{ url_for('auth.forget_password') }}" class="text-primary">Forgot your password?</a>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

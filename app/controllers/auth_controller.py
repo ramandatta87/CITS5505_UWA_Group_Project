@@ -63,7 +63,7 @@ def login():
 @auth.route('/logout')
 def logout():
     session.pop('logged_in', None)  # Remove 'logged_in' from session
-    flash('You have been logged out.', 'success')
+    flash('You have been logged out.', 'info')
     return redirect(url_for('main.index'))  # Redirect to the index page
 
 @auth.route('/forget_password', methods=['GET', 'POST'])
