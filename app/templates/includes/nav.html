@@ -1,21 +1,25 @@
 
 
 <header>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary p-0">
         <div class="container-fluid">
             <a class="navbar-brand" href="{{ url_for('main.index') }}">DevConnect</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav col-9 p-0">
                     <li class="nav-item">
                         <a href="{{ url_for('main.index') }}" class="nav-link {{ 'active' if request.path == url_for('main.index') else '' }}">Home</a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ url_for('main.forum') }}" class="nav-link {{ 'active' if request.path == url_for('main.forum') else '' }}">Forum Topics</a>
                     </li>
-                    {% if 'logged_in' in session and session['logged_in'] %}
+                    
+                </ul>
+
+                <ul class="col-3 p-0">
+                {% if 'logged_in' in session and session['logged_in'] %}
                         <!-- User dropdown menu -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
