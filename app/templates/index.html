@@ -1,24 +1,62 @@
 {% extends "includes/layout.html" %}
-<link rel="stylesheet" href="app/static/css/homepage.css">
-{% block content %}
-    <section class = "welcome">
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <h1>Welcome to CSSE DevConnect.</h1>
-                {% if login %}
-                <h3>Let's get started.</h3>
-                {% else %}
-                <p>Already registered? <a href={{ url_for('auth.login') }}>Login</a></p>
-                {% endif %}
-            </div>
-        </div>
-    </section>
 
-    <section class="questions">
-        <div class="container-term">
+{% block content %}
+<!-- Correct linking of CSS file using url_for -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
+
+<section class="welcome">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h1>Welcome to CSSE DevConnect.</h1>
+            {% if login %}
+            <h3>Let's get started.</h3>
+            {% else %}
+            <p>Already registered? <a href="{{ url_for('auth.login') }}">Login</a></p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<div class="container-fluid">
+<a class="navbar-brand" href="#">Navbar</a>
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+<span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse" id="navbarSupportedContent">
+<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+<li class="nav-item">
+<a class="nav-link active" aria-current="page" href="#">Home</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="#">Link</a>
+</li>
+<li class="nav-item dropdown">
+<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Dropdown
+</a>
+<ul class="dropdown-menu">
+<li><a class="dropdown-item" href="#">Action</a></li>
+<li><a class="dropdown-item" href="#">Another action</a></li>
+<li><hr class="dropdown-divider"></li>
+<li><a class="dropdown-item" href="#">Something else here</a></li>
+</ul>
+</li>
+<li class="nav-item">
+<a class="nav-link disabled" aria-disabled="true">Disabled</a>
+</li>
+</ul>
+<form class="d-flex" role="search">
+<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+<button class="btn btn-outline-success" type="submit">Search</button>
+</form>
+</div>
+</div>
+</nav>
+<section class="questions">
+    <div class="container-term">
         <div class="questions-content">
             <div class="questions-header">
-                <h3 class="question-title">Quick search on <span>CSSE DevConnect</span> </h3>
+                <h3 class="question-title">Quick search on <span>CSSE DevConnect</span></h3>
             </div>
             <div class="questions-body">
                 <div class="questions-body-items">
@@ -27,12 +65,12 @@
                         <div class="question-item-text">Ask a question</div>
                         <div class="question-arrow-right"></div>
                     </div>
-                    <div class="questions-body-item"  data-id="1">
+                    <div class="questions-body-item" data-id="1">
                         <img src="https://cdn.sstatic.net/Img/home/votes.svg?v=748a8f48a8e2" alt="" class="question-item-icon">
                         <div class="question-item-text">Vote on everything</div>
                         <div class="question-arrow-right"></div>
-                    </div >
-                    <div class="questions-body-item"  data-id="2">
+                    </div>
+                    <div class="questions-body-item" data-id="2">
                         <img src="https://cdn.sstatic.net/Img/home/answer.svg?v=4cd8048a676c" alt="" class="question-item-icon">
                         <div class="question-item-text">Answer questions</div>
                         <div class="question-arrow-right"></div>
@@ -45,39 +83,23 @@
                     </h4>
                     <a href="{{ url_for('auth.register') }}" class="btn question-item-content-btn">Create an account</a>
                 </div>
-                <div class="questions-body-items">
-                    <div class="questions-body-item"  data-id="3">
-                        <img src="https://cdn.sstatic.net/Img/home/tags.svg?v=913379eb09eb" alt="" class="question-item-icon">
-                        <div class="question-item-text">Tag your question</div>
-                        <div class="question-arrow-left"></div>
-                    </div>
-                    <div class="questions-body-item"  data-id="4">
-                        <img src="https://cdn.sstatic.net/Img/home/accept.svg?v=27d5be078970" alt="" class="question-item-icon">
-                        <div class="question-item-text">Accept a answer</div>
-                        <div class="question-arrow-left"></div>
-                    </div>
-                    <div class="questions-body-item"  data-id="5">
-                        <img src="https://cdn.sstatic.net/Img/home/get-recognized.svg?v=3b339d9aa10c" alt="" class="question-item-icon">
-                        <div class="question-item-text">Get recognized</div>
-                        <div class="question-arrow-left"></div>
-                    </div>
-                </div>
             </div>
         </div>
+    </div>
+</section>
+
+<section class="hr">
+    <div class="hero-content">
+        <h1 class="hero-title">We <span>CSSE</span> people who help</h1>
+        <p class="hero-paragraph">
+            We help you get answers to your toughest coding questions, share knowledge with your coworkers, and find your achievements here by joining our community.
+        </p>
+        <div class="hero-options">
+            <!-- Ensure these buttons link to actual Flask routes or functionality -->
+            <a href="#" class="btn btn-unit-question">Unit Questions</a>
+            <a href="#" class="btn btn-career-prep">Career preparation</a>
         </div>
-    </section>
-    
-    <section class="hr">
-        <div class="hero-content">
-            <h1 class="hero-title">We <span>CSSE</span> people who help</h1>
-            <p class="hero-paragraph">
-                We help you get answers to your toughest coding questions, share knowledge with your coworkers, and find your achievements here by joining our community.
-            </p>
-            <div class="hero-options">
-                <a href="#" class="btn btn-unit-question">Unit Questions</a>
-                <a href="#" class="btn btn-career-prep">Career preparation</a>
-            </div>
-        </div>
-    </section>
+    </div>
+</section>
 
 {% endblock %}

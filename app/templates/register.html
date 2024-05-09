@@ -1,33 +1,58 @@
 {% extends "includes/layout.html" %}
 
 {% block content %}
-<h2>New User Registration</h2>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title">New User Registration</h3>
+                </div>
+                <div class="card-body">
+                    <form name="register" action="{{ url_for('auth.register') }}" method="post" class="needs-validation" novalidate>
+                        {{ form.csrf_token }}
+                        
+                        <div class="form-group">
+                            {{ form.first_name.label(class_='form-label') }}
+                            {{ form.first_name(class_='form-control', placeholder='Enter First Name') }}
+                        </div>
 
-<div class="container">
-    <!-- Ensure the form action matches your Flask route for registration -->
-    <form name="register" action="{{ url_for('auth.register') }}" method="post">
-        <!-- Flask-WTF CSRF token -->
-        {{ form.csrf_token }}
+                        <div class="form-group">
+                            {{ form.last_name.label(class_='form-label') }}
+                            {{ form.last_name(class_='form-control', placeholder='Enter Last Name') }}
+                        </div>
 
-        <label for="first_name"><b>First Name</b></label>
-        <input type="text" placeholder="Enter First Name" name="first_name" required>
-        <br>
-        <label for="last_name"><b>Last Name</b></label>
-        <input type="text" placeholder="Enter Last Name" name="last_name" required>
-        <br>
-        <label for="uwa_id"><b>UWA ID (Student ID)</b></label>
-        <input type="text" placeholder="Enter UWA ID" name="uwa_id" required>
-        <br>
-        <label for="email"><b>Email</b></label>
-        <input type="email" placeholder="Enter Email" name="email" required>
-        <br>
-        <label for="major"><b>Major</b></label>
-        <input type="text" placeholder="Enter Major" name="major" required>
-        <br>
-        <label for="password"><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" name="password" required>
-        <br class="clear">
-        <input class="btn-submit" type="submit" value="Register">
-    </form>
+                        <div class="form-group">
+                            {{ form.uwa_id.label(class_='form-label') }}
+                            {{ form.uwa_id(class_='form-control', placeholder='Enter UWA ID') }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.email.label(class_='form-label') }}
+                            {{ form.email(class_='form-control', placeholder='Enter Email') }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.major.label(class_='form-label') }}
+                            {{ form.major(class_='form-control', placeholder='Enter Major') }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.password.label(class_='form-label') }}
+                            {{ form.password(class_='form-control', placeholder='Enter Password') }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.confirm_password.label(class_='form-label') }}
+                            {{ form.confirm_password(class_='form-control', placeholder='Confirm Password') }}
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Register</button>
+                        <button type="reset" class="btn btn-secondary">Reset</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
