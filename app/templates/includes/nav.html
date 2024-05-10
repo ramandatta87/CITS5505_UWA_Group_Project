@@ -1,39 +1,40 @@
-
-
 <header>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary p-0">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary p-0" style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
         <div class="container-fluid">
             <a class="navbar-brand" href="{{ url_for('main.index') }}">DevConnect</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav col-9 p-0">
+                <ul class="navbar-nav me-auto p-0">
                     <li class="nav-item">
                         <a href="{{ url_for('main.index') }}" class="nav-link {{ 'active' if request.path == url_for('main.index') else '' }}">Home</a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ url_for('main.forum') }}" class="nav-link {{ 'active' if request.path == url_for('main.forum') else '' }}">Forum Topics</a>
                     </li>
-                    
                 </ul>
-
-                <ul class="col-3 p-0">
+                <!-- Search form -->
+                <form class="d-flex ms-auto">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
                 {% if 'logged_in' in session and session['logged_in'] %}
-                        <!-- User dropdown menu -->
+                    <!-- User dropdown menu, align to the end -->
+                    <ul class="navbar-nav ms-auto">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src="{{ session['user_image'] }}" alt="user image" class="rounded-circle" style="width: 30px; height: 30px;">
+                                {{ session['user_name'] }}
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
                                 <li><a class="dropdown-item" href="{{ url_for('auth.profile') }}">Profile</a></li>
                                 <li><a class="dropdown-item" href="{{ url_for('auth.change_password') }}">Change Password</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a></li>
                             </ul>
                         </li>
-                    {% endif %}
-                </ul>
+                    </ul>
+                {% endif %}
             </div>
         </div>
     </nav>
