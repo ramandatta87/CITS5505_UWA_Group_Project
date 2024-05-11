@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import DataRequired, Email,EqualTo
+from wtforms.validators import DataRequired, Email, EqualTo, Length
+
 
 class RegisterForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired()])
@@ -17,7 +18,34 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Login')
 
+
 class ForgetPasswordForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Email(message='Enter a valid email.')])
-    uwa_id = StringField('UWA ID', validators=[DataRequired(message='Enter UWA ID.')])
-    submit = SubmitField('Send Reset Link')
+    first_name = StringField('First Name', validators=[DataRequired()])
+    uwa_id = StringField('UWA ID', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    new_password = PasswordField('New Password', validators=[
+        DataRequired(),
+        Length(min=6, message='Your password should be at least 6 characters long.')
+    ])
+    confirm_new_password = PasswordField('Confirm New Password', validators=[
+        DataRequired(),
+        EqualTo('new_password', message='Passwords must match.')
+    ])
+    submit = SubmitField('Submit')
+
+class ChangePasswordForm(FlaskForm):
+    old_password = PasswordField('Old Password', validators=[DataRequired()])
+    new_password = PasswordField('New Password', [
+        DataRequired(),
+        Length(min=6, message='Password should be at least 6 characters long.')
+    ])
+    confirm_password = PasswordField('Confirm New Password', [
+        DataRequired(),
+        EqualTo('new_password', message='Passwords must match.')
+    ])
+    submit = SubmitField('Change Password')
+
+class EditProfileForm(FlaskForm):
+    first_name = StringField('First Name', validators=[DataRequired()])
+    last_name = StringField('Last Name', validators=[DataRequired()])
+    major = StringField('Major', validators=[DataRequired()])
