@@ -1,3 +1,5 @@
+
+
 <header>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary p-0" style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
         <div class="container-fluid">
@@ -34,6 +36,11 @@
                             </ul>
                         </li>
                     </ul>
+                {% else %}
+                    <div class="navbar-nav ms-auto">
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light me-2">Login</a>
+                        <a href="{{ url_for('auth.register') }}" class="btn btn-success">Sign Up</a>
+                    </div>
                 {% endif %}
             </div>
         </div>
