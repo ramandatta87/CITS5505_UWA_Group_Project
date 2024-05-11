@@ -168,3 +168,4 @@ venv/Lib/site-packages/idna/__pycache__/uts46data.cpython-312.pyc
 venv/Lib/site-packages/email_validator/__pycache__/__init__.cpython-312.pyc
 venv/*
 v
+app/__pycache__/*
