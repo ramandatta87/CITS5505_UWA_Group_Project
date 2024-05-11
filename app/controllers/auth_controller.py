@@ -2,7 +2,7 @@ from flask import Blueprint, current_app, render_template, request, flash, redir
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 from app.models.user import User
-from app.forms import RegisterForm, LoginForm, ForgetPasswordForm, ChangePasswordForm
+from app.forms import RegisterForm, LoginForm, ForgetPasswordForm, ChangePasswordForm, EditProfileForm
 from app import db, mail
 from flask_mail import  Message
 
@@ -98,12 +98,7 @@ CSSE DevConnect
 '''
     mail.send(msg)
 
-@auth.route('/profile')
-def profile():
-    if not session.get('logged_in'):
-        flash("Please log in to view this page.", "warning")
-        return redirect(url_for('auth.login'))
-    return render_template('profile.html')
+
 
 @auth.route('/change-password', methods=['GET', 'POST'])
 def change_password():
@@ -129,3 +124,23 @@ def change_password():
     return render_template('change_password.html', form=form)
  
 
+@auth.route('/profile', methods=['GET', 'POST'])
+def profile():
+    # Check if user is logged in
+    if 'user_id' not in session:
+        flash('Please log in to view this page', 'info')
+        return redirect(url_for('auth.login'))
+    
+    user = User.query.get(session['user_id'])  # Fetch the user based on session user_id
+    form = EditProfileForm(obj=user)  # Pre-fill form with existing user details
+    
+    if request.method == 'POST' and form.validate_on_submit():
+        user.first_name = form.first_name.data
+        user.last_name = form.last_name.data
+        
+        user.major = form.major.data
+        db.session.commit()
+        flash('Your profile has been updated.', 'success')
+        return redirect(url_for('auth.profile'))  # Redirect to the profile page to see updated info
+    
+    return render_template('profile.html', form=form)
