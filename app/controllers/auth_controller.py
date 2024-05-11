@@ -2,7 +2,7 @@ from flask import Blueprint, current_app, render_template, request, flash, redir
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 from app.models.user import User
-from app.forms import RegisterForm, LoginForm, ForgetPasswordForm
+from app.forms import RegisterForm, LoginForm, ForgetPasswordForm, ChangePasswordForm
 from app import db, mail
 from flask_mail import  Message
 
@@ -46,6 +46,7 @@ def login():
         if user and check_password_hash(user.password_hash, form.password.data):
             session['logged_in'] = True
             session['user_name'] = f"{user.first_name} {user.last_name}"
+            session['user_id'] = user.id
             session['server_start_token'] = current_app.config['SERVER_START_TOKEN']
             return redirect(url_for('main.index'))
         else:
@@ -109,13 +110,21 @@ def change_password():
     if not session.get('logged_in'):
         flash("Please log in to access this page.", "info")
         return redirect(url_for('auth.login'))
+    
     form = ChangePasswordForm()
     if form.validate_on_submit():
         current_user = User.query.get(session['user_id'])  # Ensure you have user_id in session
+
+        # Check if the old password is correct
+        if not check_password_hash(current_user.password_hash, form.old_password.data):
+            flash('Invalid old password.', 'error')
+            return render_template('change_password.html', form=form)
+
+        # Update the password
         current_user.password_hash = generate_password_hash(form.new_password.data)
         db.session.commit()
         flash('Your password has been updated!', 'success')
         return redirect(url_for('auth.profile'))
-    return render_template('change_password.html', form)
-                           
+    
+    return render_template('change_password.html', form=form)                           
 

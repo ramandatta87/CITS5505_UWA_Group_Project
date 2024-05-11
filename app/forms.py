@@ -32,3 +32,21 @@ class ForgetPasswordForm(FlaskForm):
         EqualTo('new_password', message='Passwords must match.')
     ])
     submit = SubmitField('Submit')
+
+class ChangePasswordForm(FlaskForm):
+    old_password = PasswordField('Old Password', validators=[DataRequired()])
+    new_password = PasswordField('New Password', [
+        DataRequired(),
+        Length(min=6, message='Password should be at least 6 characters long.')
+    ])
+    confirm_password = PasswordField('Confirm New Password', [
+        DataRequired(),
+        EqualTo('new_password', message='Passwords must match.')
+    ])
+    submit = SubmitField('Change Password')
+
+class EditProfileForm(FlaskForm):
+    first_name = StringField('First Name', validators=[DataRequired()])
+    last_name = StringField('Last Name', validators=[DataRequired()])
+    uwa_id = StringField('UWA ID', validators=[DataRequired()])
+    major = StringField('Major', validators=[DataRequired()])
