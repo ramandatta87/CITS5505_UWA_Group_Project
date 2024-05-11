@@ -24,11 +24,17 @@ class ForgetPasswordForm(FlaskForm):
     submit = SubmitField('Send Reset Link')
 
 
-class ChangePasswordForm(FlaskForm):
+class ForgetPasswordForm(FlaskForm):
+    first_name = StringField('First Name', validators=[DataRequired()])
+    uwa_id = StringField('UWA ID', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    old_password = PasswordField('Old Password', validators=[DataRequired()])
     new_password = PasswordField('New Password', validators=[
         DataRequired(),
-        Length(min=6, message='Your password must be at least 6 characters long.'),
-        EqualTo('confirm_new_password', message='Passwords must match.')
+        Length(min=6, message='Your password should be at least 6 characters long.')
     ])
-    confirm_new_password = PasswordField('Confirm New Password', validators=[DataRequired()])
-    submit = SubmitField('Change Password')
+    confirm_new_password = PasswordField('Confirm New Password', validators=[
+        DataRequired(),
+        EqualTo('new_password', message='Passwords must match.')
+    ])
+    submit = SubmitField('Submit')

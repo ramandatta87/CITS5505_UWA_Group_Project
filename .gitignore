@@ -169,3 +169,4 @@ venv/Lib/site-packages/email_validator/__pycache__/__init__.cpython-312.pyc
 venv/*
 v
 app/__pycache__/*
+app/__pycache__/forms.cpython-312.pyc
