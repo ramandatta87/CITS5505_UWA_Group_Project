@@ -115,16 +115,17 @@ def change_password():
     if form.validate_on_submit():
         current_user = User.query.get(session['user_id'])  # Ensure you have user_id in session
 
-        # Check if the old password is correct
         if not check_password_hash(current_user.password_hash, form.old_password.data):
             flash('Invalid old password.', 'error')
             return render_template('change_password.html', form=form)
 
-        # Update the password
         current_user.password_hash = generate_password_hash(form.new_password.data)
         db.session.commit()
-        flash('Your password has been updated!', 'success')
-        return redirect(url_for('auth.profile'))
+        
+        session.clear()  # Clear the session to log out the user
+        flash('Your password has been updated! Please log in again.', 'success')
+        return redirect(url_for('auth.login'))
     
-    return render_template('change_password.html', form=form)                           
+    return render_template('change_password.html', form=form)
+ 
 
