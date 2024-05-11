@@ -18,17 +18,11 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Login')
 
-class ForgetPasswordForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Email(message='Enter a valid email.')])
-    uwa_id = StringField('UWA ID', validators=[DataRequired(message='Enter UWA ID.')])
-    submit = SubmitField('Send Reset Link')
-
 
 class ForgetPasswordForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired()])
     uwa_id = StringField('UWA ID', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    old_password = PasswordField('Old Password', validators=[DataRequired()])
     new_password = PasswordField('New Password', validators=[
         DataRequired(),
         Length(min=6, message='Your password should be at least 6 characters long.')

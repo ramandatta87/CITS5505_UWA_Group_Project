@@ -2,8 +2,10 @@ from flask import Blueprint, current_app, render_template, request, flash, redir
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 from app.models.user import User
-from app.forms import RegisterForm, LoginForm, ForgetPasswordForm, ChangePasswordForm
-from app import db
+from app.forms import RegisterForm, LoginForm, ForgetPasswordForm
+from app import db, mail
+from flask_mail import  Message
+
 
 auth = Blueprint('auth', __name__)
 
@@ -68,9 +70,32 @@ def logout():
 def forget_password():
     form = ForgetPasswordForm()
     if form.validate_on_submit():
-        flash('Please check your email for reset password instructions.')
-        return redirect(url_for('auth.login'))
-    return render_template('forget_password.html', form=form)
+        # Fetch the user based on UWA ID and Email for extra verification
+        user = User.query.filter_by(uwa_id=form.uwa_id.data, email=form.email.data).first()
+        if user and user.first_name == form.first_name.data:
+            # Update the user's password
+            user.password_hash = generate_password_hash(form.new_password.data)
+            db.session.commit()
+            # Send a confirmation email
+            send_password_change_email(user)
+            flash('Your password has been updated. Please check your email for confirmation.', 'success')
+            return redirect(url_for('auth.login'))
+        else:
+            flash('Invalid credentials. Please try again.', 'danger')
+    return render_template('forgetpassword.html', form=form)
+
+def send_password_change_email(user):
+    msg = Message('Password Change Confirmation', sender='cssedevconnect@gmail.com', recipients=[user.email])
+    msg.body = f'''Hello {user.first_name},
+
+This is a confirmation that the password for your account {user.email} has just been changed.
+
+If you did not make this change, please contact support immediately.
+
+Best regards,
+Your Website Team
+'''
+    mail.send(msg)
 
 @auth.route('/profile')
 def profile():
