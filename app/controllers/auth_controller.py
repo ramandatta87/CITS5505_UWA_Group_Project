@@ -93,7 +93,7 @@ This is a confirmation that the password for your account {user.email} has just 
 If you did not make this change, please contact support immediately.
 
 Best regards,
-Your Website Team
+CSSE DevConnect
 '''
     mail.send(msg)
 
