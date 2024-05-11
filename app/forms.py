@@ -48,5 +48,4 @@ class ChangePasswordForm(FlaskForm):
 class EditProfileForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired()])
     last_name = StringField('Last Name', validators=[DataRequired()])
-    uwa_id = StringField('UWA ID', validators=[DataRequired()])
     major = StringField('Major', validators=[DataRequired()])
