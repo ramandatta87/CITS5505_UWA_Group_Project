@@ -173,3 +173,4 @@ app/__pycache__/forms.cpython-312.pyc
 
 app/models/__pycache__/*
 app/__pycache__/forms.cpython-312.pyc
+venv/*

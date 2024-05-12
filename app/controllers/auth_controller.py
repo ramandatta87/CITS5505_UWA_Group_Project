@@ -1,4 +1,5 @@
 from flask import Blueprint, current_app, render_template, request, flash, redirect, url_for, session
+from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 from app.models.user import User
@@ -144,3 +145,8 @@ def profile():
         return redirect(url_for('auth.profile'))  # Redirect to the profile page to see updated info
     
     return render_template('profile.html', form=form)
+
+@auth.route('/secret')
+@login_required
+def secret():
+    return 'Only authenticated users are allowed!'
