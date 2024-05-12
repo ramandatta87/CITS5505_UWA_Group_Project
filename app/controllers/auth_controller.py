@@ -141,6 +141,10 @@ def profile():
         
         user.major = form.major.data
         db.session.commit()
+        
+        # Update session data to reflect changes
+        session['user_name'] = f"{user.first_name} {user.last_name}"
+
         flash('Your profile has been updated.', 'success')
         return redirect(url_for('auth.profile'))  # Redirect to the profile page to see updated info
     
