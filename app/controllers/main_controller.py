@@ -4,7 +4,7 @@ from app import mail,db
 import datetime         #Importing for mail date & time
 from flask_login import current_user, login_required
 from app.forms import PostForm
-from app.models.model import Posts
+from app.models.model import Posts, Tag 
 
 # Define a Blueprint named 'main' for organizing routes and views
 main = Blueprint('main', __name__)
