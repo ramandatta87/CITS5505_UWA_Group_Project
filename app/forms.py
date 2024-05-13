@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField,BooleanField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 from flask_ckeditor import CKEditor,CKEditorField
 
@@ -59,13 +59,8 @@ class EditProfileForm(FlaskForm):
 class PostForm(FlaskForm):
     title = StringField("Title", validators=[DataRequired()])
     content = CKEditorField('Content', validators=[DataRequired()])
-    # SelectField for choosing a tag, dynamically populated from the Tag model
-    tag = SelectField('Tag', coerce=int, validators=[DataRequired()])
+    # StringField for entering a tag
+    tag = StringField('Tag', validators=[DataRequired()])
     # Boolean field for indicating if the post is related to career preparation
     career_preparation = BooleanField('Career Preparation')
-    submit = SubmitField("Submit")
-
-    def __init__(self, *args, **kwargs):
-        super(PostForm, self).__init__(*args, **kwargs)
-        # Populate the tag choices from the Tag model
-        self.tag.choices = [(tag.id, tag.tag) for tag in Tag.query.all()]   
+    submit = SubmitField("Submit") 

@@ -2,33 +2,46 @@
 {% block content %}
 
 {% for message in get_flashed_messages() %}
-
-<div class = "alert alert-warning alert-dismissible fade show" role="alert">
-
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
     {{ message }}
-    <button type="button" class ="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 {% endfor %}
 
 <h1>Post Question</h1>
 <br/>
 <div class="shadow p-3 mb-5 bg-body rounded">
-
     <form method="POST">
-        {{form.hidden_tag()}}
+        {{ form.hidden_tag() }}
 
-        {{form.title.label(class="form-label") }}
+        <!-- Title Field -->
+        <div class="mb-3">
+            {{ form.title.label(class="form-label") }}
+            {{ form.title(class="form-control") }}
+        </div>
 
-        {{form.title(class="form-control")}}
-        <br/>
+        <!-- Tag Field -->
+        <div class="mb-3">
+            {{ form.tag.label(class="form-label") }}
+            {{ form.tag(class="form-control") }}
+        </div>
 
-        
+        <!-- Career Preparation Field -->
+        <div class="mb-3 form-check">
+            {{ form.career_preparation(class="form-check-input", id="career_preparation") }}
+            <label class="form-check-label" for="career_preparation">Career Preparation Question</label>
+        </div>
 
-        {{form.content.label(class="form-label") }}
+        <!-- Content Field -->
+        <div class="mb-3">
+            {{ form.content.label(class="form-label") }}
+            {{ form.content(class="form-control", rows="5") }}
+        </div>
 
-        {{form.content(class="form-control", rows="5")}}
-        <br/>
-        {{form.submit(class="btn btn-secondary") }}
+        <!-- Submit Button -->
+        <div class="mb-3">
+            {{ form.submit(class="btn btn-secondary") }}
+        </div>
     </form>
     {{ ckeditor.load() }}
     {{ ckeditor.config(name='content') }}
