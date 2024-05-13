@@ -43,7 +43,8 @@ class Tag(db.Model):
         return f'<Tag {self.tag}>'
     
 class Posts(db.Model):
-    __tablename__ = "Posts"
+    __tablename__ = "posts"
+    
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255), nullable=False)
     content = db.Column(db.Text, nullable=False)
@@ -51,6 +52,10 @@ class Posts(db.Model):
     date_posted = db.Column(db.DateTime, default=datetime.utcnow)
     deleted = db.Column(db.Boolean, default=False)
     answered = db.Column(db.Boolean, default=False)
+    tag_id = db.Column(db.Integer, db.ForeignKey('tags.id'))
+    career_preparation = db.Column(db.Boolean, default=False)
 
+    tag = db.relationship('Tag', backref=db.backref('posts', lazy=True))
+    
     def __repr__(self):
         return f'<Posts {self.title}>'
