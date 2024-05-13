@@ -34,3 +34,16 @@ class User(db.Model):
     # Method to provide a string representation of the User object
     def __repr__(self):
         return f'<User {self.email}>'
+
+class Posts(db.Model):
+    __tablename__ = "Posts"
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    date_posted = db.Column(db.DateTime, default=datetime.utcnow)
+    deleted = db.Column(db.Boolean, default=False)
+    answered = db.Column(db.Boolean, default=False)
+
+    def __repr__(self):
+        return f'<Posts {self.title}>'

@@ -2,7 +2,7 @@ from flask import Blueprint, current_app, render_template, request, flash, redir
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
-from app.models.user import User
+from app.models.model import User
 from app.forms import RegisterForm, LoginForm, ForgetPasswordForm, ChangePasswordForm, EditProfileForm
 from app import db, mail
 from flask_mail import  Message

@@ -36,7 +36,8 @@ def create_app(config_class=Config):
     # User loader callback
     @login_manager.user_loader
     def load_user(user_id):
-        from app.models.user import User  # Import inside to avoid circular import issues
+        from app.models.model import User  # Import inside to avoid circular import issues
+        
         return User.query.get(int(user_id))  # Convert user_id to int and retrieve the user
 
     # Import and register blueprints for different parts of the application
@@ -48,5 +49,5 @@ def create_app(config_class=Config):
 
     # Register 'main' blueprint without URL prefix
     app.register_blueprint(main)
-
+    
     return app
