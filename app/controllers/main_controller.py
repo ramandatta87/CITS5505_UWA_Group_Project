@@ -1,7 +1,10 @@
-from flask import Blueprint, render_template, session
+from flask import Blueprint, render_template, session,flash
 from flask_mail import  Message
-from app import mail
+from app import mail,db
 import datetime         #Importing for mail date & time
+from flask_login import current_user, login_required
+from app.forms import PostForm
+from app.models.model import Posts
 
 # Define a Blueprint named 'main' for organizing routes and views
 main = Blueprint('main', __name__)
@@ -33,3 +36,20 @@ def mail_check(): # Sample function to test email
     msg = Message("Hello from Flask", sender="cssedevconnect@gmail.com", recipients=["ramandatta87@gmail.com"])
     msg.body = f"This is a test email sent from Flask using Gmail. Mail Generated Time : {ct}"
     mail.send(msg)
+
+
+@main.route("/add_post",methods=['GET','POST'])
+@login_required  # Make sure the user is logged in
+def add_post():
+    form=PostForm()
+    if form.validate_on_submit():
+        post =  Posts(title=form.title.data, content=form.content.data, author_id= current_user.id, deleted=False, answered=False )
+        form.title.data=''
+        form.content.data=''
+
+        db.session.add(post)
+        db.session.commit()
+
+        flash("Blog Post Submitted Successfully")
+
+    return render_template("/main/add_post.html",form=form)

@@ -4,6 +4,7 @@ from flask_mail import Mail  # Importing flask_email module
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from .config import Config
+from flask_ckeditor import CKEditor,CKEditorField
 
 
 # Initialize SQLAlchemy and migration engine
@@ -16,6 +17,8 @@ login_manager = LoginManager()  # Initialize LoginManager
 def create_app(config_class=Config):
     # Create Flask app instance
     app = Flask(__name__)
+
+    ckeditor = CKEditor(app)
 
     #Using Configuration Class
     app.config.from_object(config_class)
@@ -38,7 +41,10 @@ def create_app(config_class=Config):
     def load_user(user_id):
         from app.models.model import User  # Import inside to avoid circular import issues
         
-        return User.query.get(int(user_id))  # Convert user_id to int and retrieve the user
+        print("Loading user:", user_id)
+        user = User.query.get(int(user_id))
+        print("Loaded user:", user)
+        return user
 
     # Import and register blueprints for different parts of the application
     from app.controllers.auth_controller import auth

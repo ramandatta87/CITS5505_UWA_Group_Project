@@ -49,22 +49,17 @@ def login():
             session['user_name'] = f"{user.first_name} {user.last_name}"
             session['user_id'] = user.id
             session['server_start_token'] = current_app.config['SERVER_START_TOKEN']
+            login_user(user, remember=True)
             return redirect(url_for('main.index'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', form=form)
 
-@auth.before_app_request
-def before_request():
-    if 'server_start_token' in session:
-        if session['server_start_token'] != current_app.config['SERVER_START_TOKEN']:
-            session.clear()
-            flash('Session has expired, please log in again.', 'info')
-            return redirect(url_for('auth.login'))
 
 @auth.route('/logout')
 def logout():
     session.clear()
+    logout_user()
     flash('You have been logged out.', 'info')
     return redirect(url_for('main.index'))
 

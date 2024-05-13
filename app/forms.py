@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
-
+from flask_ckeditor import CKEditor,CKEditorField
 
 class RegisterForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired()])
@@ -49,3 +49,12 @@ class EditProfileForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired()])
     last_name = StringField('Last Name', validators=[DataRequired()])
     major = StringField('Major', validators=[DataRequired()])
+
+
+class PostForm(FlaskForm):
+    title= StringField("Title",validators=[DataRequired()])
+    content = CKEditorField('Content',validators=[DataRequired()])
+    
+    submit=SubmitField("Submit")
+
+   

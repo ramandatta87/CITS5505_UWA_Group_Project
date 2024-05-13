@@ -10,7 +10,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto p-0">
                     <li class="nav-item">
-                        <a href="{{ url_for('main.index') }}" class="nav-link {{ 'active' if request.path == url_for('main.index') else '' }}">Home</a>
+                        <a href="{{ url_for('main.add_post') }}" class="nav-link {{ 'active' if request.path == url_for('main.add_post') else '' }}">Create Post</a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ url_for('main.forum') }}" class="nav-link {{ 'active' if request.path == url_for('main.forum') else '' }}">Forum Topics</a>
