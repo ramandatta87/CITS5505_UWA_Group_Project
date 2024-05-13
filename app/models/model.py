@@ -32,6 +32,16 @@ class User(UserMixin, db.Model):
     def is_active(self):
         return not self.is_disabled
 
+# Tag Model for Tagging Category in Posting 
+class Tag(db.Model):
+    __tablename__ = "tags"
+
+    id = db.Column(db.Integer, primary_key=True)
+    tag = db.Column(db.String(100), nullable=False)
+
+    def __repr__(self):
+        return f'<Tag {self.tag}>'
+    
 class Posts(db.Model):
     __tablename__ = "Posts"
     id = db.Column(db.Integer, primary_key=True)
