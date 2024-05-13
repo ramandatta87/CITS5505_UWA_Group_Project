@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session,flash
+from flask import Blueprint, render_template, session,flash, redirect, url_for
 from flask_mail import  Message
 from app import mail,db
 import datetime         #Importing for mail date & time
@@ -38,18 +38,35 @@ def mail_check(): # Sample function to test email
     mail.send(msg)
 
 
-@main.route("/add_post",methods=['GET','POST'])
-@login_required  # Make sure the user is logged in
+@main.route("/add_post", methods=['GET', 'POST'])
+@login_required
 def add_post():
-    form=PostForm()
+    form = PostForm()
     if form.validate_on_submit():
-        post =  Posts(title=form.title.data, content=form.content.data, author_id= current_user.id, deleted=False, answered=False )
-        form.title.data=''
-        form.content.data=''
+        # Check if the tag exists
+        tag_text = form.tag.data.strip()
+        tag = Tag.query.filter_by(tag=tag_text).first()
 
+        # If the tag doesn't exist, create a new one
+        if not tag:
+            tag = Tag(tag=tag_text)
+            db.session.add(tag)
+            db.session.commit()
+
+        # Create the new post
+        post = Posts(
+            title=form.title.data,
+            content=form.content.data,
+            tag_id=tag.id,  # Use the tag's ID
+            career_preparation=form.career_preparation.data,
+            author_id=current_user.id,
+            deleted=False,
+            answered=False
+        )
         db.session.add(post)
         db.session.commit()
 
         flash("Blog Post Submitted Successfully")
-
-    return render_template("/main/add_post.html",form=form)
+        return redirect(url_for('main.add_post'))
+    
+    return render_template("/main/add_post.html", form=form)
