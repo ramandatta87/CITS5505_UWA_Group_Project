@@ -1,0 +1,51 @@
+{% extends "includes/layout.html" %}
+{% block title %}Edit Post{% endblock %}
+{% block content %}
+
+<!-- Display Flash Messages -->
+{% for message in get_flashed_messages() %}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+
+<h1>Edit Post</h1>
+<br/>
+<div class="shadow p-3 mb-5 bg-body rounded">
+    <form method="POST" action="{{ url_for('main.edit_post', post_id=post.id) }}">
+        {{ form.hidden_tag() }}
+
+        <!-- Title Field -->
+        <div class="mb-3">
+            {{ form.title.label(class="form-label", for="title") }}
+            {{ form.title(class="form-control", id="title") }}
+        </div>
+
+        <!-- Tag Field -->
+        <div class="mb-3">
+            {{ form.tag.label(class="form-label", for="tag") }}
+            {{ form.tag(class="form-control", id="tag") }}
+        </div>
+
+        <!-- Career Preparation Field -->
+        <div class="mb-3 form-check">
+            {{ form.career_preparation(class="form-check-input", id="career_preparation") }}
+            <label class="form-check-label" for="career_preparation">Career Preparation Question</label>
+        </div>
+
+        <!-- Content Field -->
+        <div class="mb-3">
+            {{ form.content.label(class="form-label", for="content") }}
+            {{ form.content(class="form-control", id="content", rows="5") }}
+        </div>
+
+        <!-- Submit Button -->
+        <div class="mb-3">
+            {{ form.submit(class="btn btn-primary", id="submit") }}
+            <a href="{{ url_for('main.view_post', post_id=post.id) }}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

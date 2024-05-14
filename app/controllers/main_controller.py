@@ -1,9 +1,9 @@
-from flask import Blueprint, render_template, session,flash, redirect, url_for, request, Response, json, jsonify
+from flask import Blueprint, render_template, session, flash, redirect, url_for, request, Response, json, jsonify
 from flask_mail import  Message
 from app import mail, db
 import datetime         #Importing for mail date & time
 from flask_login import current_user, login_required
-from app.forms import PostForm
+from app.forms import PostForm, FilterSortForm
 from app.models.model import Posts, Tag, User 
 
 # Define a Blueprint named 'main' for organizing routes and views
@@ -80,35 +80,7 @@ def autocomplete():
     return Response(json.dumps(results), mimetype='application/json')
 
 
-@main.route('/posts')
-def posts():
-    # Get query parameters
-    order = request.args.get('order', 'asc')
-    filter_by = request.args.get('filter_by', 'author')
-    filter_value = request.args.get('filter_value', '')
 
-    # Base query
-    query = Posts.query.join(User, Posts.author_id == User.id).join(Tag, Posts.tag_id == Tag.id)
-
-    # Apply filtering if filter_by and filter_value are provided
-    if filter_by and filter_value:
-        if filter_by == 'author':
-            query = query.filter((User.first_name.ilike(f'%{filter_value}%')) | (User.last_name.ilike(f'%{filter_value}%')))
-        elif filter_by == 'title':
-            query = query.filter(Posts.title.ilike(f'%{filter_value}%'))
-        elif filter_by == 'tag':
-            query = query.filter(Tag.tag.ilike(f'%{filter_value}%'))
-
-    # Apply sorting
-    if order == 'desc':
-        query = query.order_by(Posts.date_posted.desc())
-    else:
-        query = query.order_by(Posts.date_posted.asc())
-
-    # Execute query
-    posts = query.all()
-
-    return render_template("main/posts.html", posts=posts)
 
 @main.route('/api/posts')
 def api_posts():
@@ -194,3 +166,65 @@ def view_post(post_id):
     author = User.query.get_or_404(post.author_id)
     # Render the view_post.html template with the post and author details
     return render_template('main/view_post.html', post=post, author=author)
+
+# Route to edit a post by ID
+@main.route('/post/<int:post_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_post(post_id):
+    # Fetch the post by ID, return 404 if not found
+    post = Posts.query.get_or_404(post_id)
+
+    # Ensure the current user is the author of the post
+    if post.author_id != current_user.id:
+        flash('You are not authorized to edit this post.', 'danger')
+        return redirect(url_for('main.view_post', post_id=post_id))
+
+    form = PostForm()
+
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.content = form.content.data
+        tag = Tag.query.filter_by(tag=form.tag.data).first()
+        if tag is None:
+            tag = Tag(tag=form.tag.data)
+            db.session.add(tag)
+            db.session.commit()
+        post.tag_id = tag.id
+        post.career_preparation = form.career_preparation.data
+        db.session.commit()
+        flash('Your post has been updated!', 'success')
+        return redirect(url_for('main.view_post', post_id=post.id))
+
+    elif request.method == 'GET':
+        form.title.data = post.title
+        form.content.data = post.content
+        form.tag.data = post.tag.tag if post.tag else ''
+        form.career_preparation.data = post.career_preparation
+
+    return render_template('main/edit_post.html', title='Edit Post', form=form, post=post)
+
+# Route to display posts with filtering and sorting
+@main.route('/posts', methods=['GET', 'POST'])
+def posts():
+    form = FilterSortForm()
+    query = Posts.query
+
+    if form.validate_on_submit():
+        filter_by = form.filter_by.data
+        filter_value = form.filter_value.data
+        order = form.order.data
+
+        if filter_by == 'author':
+            query = query.join(User).filter(User.first_name.contains(filter_value) | User.last_name.contains(filter_value))
+        elif filter_by == 'title':
+            query = query.filter(Posts.title.contains(filter_value))
+        elif filter_by == 'tag':
+            query = query.join(Tag).filter(Tag.tag.contains(filter_value))
+
+        if order == 'asc':
+            query = query.order_by(Posts.date_posted.asc())
+        else:
+            query = query.order_by(Posts.date_posted.desc())
+
+    posts = query.all()
+    return render_template('main/posts.html', form=form, posts=posts)

@@ -17,9 +17,17 @@
     <p><strong>Posted on:</strong> {{ post.date_posted.strftime('%B %d, %Y') }}</p>
     <p><strong>Tag:</strong> {{ post.tag.tag }}</p>
     <br/>
-    <p>{{ post.content }}</p>
+    <p>{{ post.content|safe }}</p>
 </div>
 
+{% if post.author_id == current_user.id %}
+<a href="{{ url_for('main.edit_post', post_id=post.id) }}" class="btn btn-secondary">Edit</a>
+{% endif %}
+
+{% if request.args.get('origin') == 'my_posts' %}
 <a href="{{ url_for('main.my_posts') }}" class="btn btn-secondary">Back to My Posts</a>
+{% else %}
+<a href="{{ url_for('main.posts') }}" class="btn btn-secondary">Back to All Posts</a>
+{% endif %}
 
 {% endblock %}

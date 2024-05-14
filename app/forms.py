@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField,BooleanField
+from wtforms import StringField, TextAreaField, BooleanField, SubmitField, SelectField,PasswordField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 from flask_ckeditor import CKEditor,CKEditorField
 
@@ -64,3 +64,11 @@ class PostForm(FlaskForm):
     # Boolean field for indicating if the post is related to career preparation
     career_preparation = BooleanField('Career Preparation')
     submit = SubmitField("Submit") 
+
+
+# Form for Filter 
+class FilterSortForm(FlaskForm):
+    filter_by = SelectField('Filter By', choices=[('author', 'Author'), ('title', 'Title'), ('tag', 'Tag')], validators=[DataRequired()])
+    filter_value = StringField('Filter Value')
+    order = SelectField('Order', choices=[('asc', 'Ascending'), ('desc', 'Descending')], validators=[DataRequired()])
+    submit = SubmitField('Apply')    
