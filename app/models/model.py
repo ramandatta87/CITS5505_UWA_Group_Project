@@ -55,7 +55,9 @@ class Posts(db.Model):
     tag_id = db.Column(db.Integer, db.ForeignKey('tags.id'))
     career_preparation = db.Column(db.Boolean, default=False)
 
+    author = db.relationship('User', backref=db.backref('posts', lazy=True))
     tag = db.relationship('Tag', backref=db.backref('posts', lazy=True))
+    
     
     def __repr__(self):
         return f'<Posts {self.title}>'

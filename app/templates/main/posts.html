@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posts</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-4">Posts</h1>
+        
+        <!-- Filter and Sort Form -->
+        <form id="filter-sort-form" class="mb-4">
+            <div class="form-row align-items-end">
+                <div class="col-md-4">
+                    <label for="filter_by">Filter By</label>
+                    <select class="form-control" id="filter_by" name="filter_by">
+                        <option value="author" selected>Author</option>
+                        <option value="title">Title</option>
+                        <option value="tag">Tag</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="filter_value">Filter Value</label>
+                    <input type="text" class="form-control" id="filter_value" name="filter_value">
+                </div>
+                <div class="col-md-2">
+                    <label for="order">Order</label>
+                    <select class="form-control" id="order" name="order">
+                        <option value="asc">Ascending</option>
+                        <option value="desc">Descending</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+
+        <!-- Posts List -->
+        <ul class="list-group" id="posts-list">
+            <!-- Posts will be dynamically inserted here -->
+        </ul>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script>
+        function loadPosts() {
+            // Get form values
+            var filter_by = $('#filter_by').val();
+            var filter_value = $('#filter_value').val();
+            var order = $('#order').val();
+            
+            // Make AJAX request
+            $.ajax({
+                url: "{{ url_for('main.api_posts') }}",
+                data: {
+                    filter_by: filter_by,
+                    filter_value: filter_value,
+                    order: order
+                },
+                success: function(data) {
+                    // Clear existing posts
+                    $('#posts-list').empty();
+                    
+                    // Insert new posts
+                    data.forEach(function(post) {
+                        var postItem = `
+                            <li class="list-group-item">
+                                <h5>${post.title}</h5>
+                                <p>by ${post.author_first_name} ${post.author_last_name} on ${post.date_posted}</p>
+                                <p>Tag: ${post.tag}</p>
+                                <p>${post.content}</p>
+                            </li>
+                        `;
+                        $('#posts-list').append(postItem);
+                    });
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            // Load posts on page load
+            loadPosts();
+
+            // Trigger AJAX request on change
+            $('#filter_by, #filter_value, #order').on('change input', function() {
+                loadPosts();
+            });
+
+            // Autocomplete for filter value
+            $('#filter_value').autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "{{ url_for('main.autocomplete_posts') }}",
+                        data: {
+                            q: request.term,
+                            filter_by: $('#filter_by').val()
+                        },
+                        success: function(data) {
+                            response(data);
+                        }
+                    });
+                },
+                minLength: 2
+            });
+        });
+    </script>
+</body>
+</html>

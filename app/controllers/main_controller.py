@@ -1,10 +1,10 @@
-from flask import Blueprint, render_template, session,flash, redirect, url_for, request, Response, json
+from flask import Blueprint, render_template, session,flash, redirect, url_for, request, Response, json, jsonify
 from flask_mail import  Message
 from app import mail, db
 import datetime         #Importing for mail date & time
 from flask_login import current_user, login_required
 from app.forms import PostForm
-from app.models.model import Posts, Tag 
+from app.models.model import Posts, Tag, User 
 
 # Define a Blueprint named 'main' for organizing routes and views
 main = Blueprint('main', __name__)
@@ -78,3 +78,99 @@ def autocomplete():
     results = [result[0] for result in results]  # Extract names from tuples
     #app.logger.debug(results)
     return Response(json.dumps(results), mimetype='application/json')
+
+
+@main.route('/posts')
+def posts():
+    # Get query parameters
+    order = request.args.get('order', 'asc')
+    filter_by = request.args.get('filter_by', 'author')
+    filter_value = request.args.get('filter_value', '')
+
+    # Base query
+    query = Posts.query.join(User, Posts.author_id == User.id).join(Tag, Posts.tag_id == Tag.id)
+
+    # Apply filtering if filter_by and filter_value are provided
+    if filter_by and filter_value:
+        if filter_by == 'author':
+            query = query.filter((User.first_name.ilike(f'%{filter_value}%')) | (User.last_name.ilike(f'%{filter_value}%')))
+        elif filter_by == 'title':
+            query = query.filter(Posts.title.ilike(f'%{filter_value}%'))
+        elif filter_by == 'tag':
+            query = query.filter(Tag.tag.ilike(f'%{filter_value}%'))
+
+    # Apply sorting
+    if order == 'desc':
+        query = query.order_by(Posts.date_posted.desc())
+    else:
+        query = query.order_by(Posts.date_posted.asc())
+
+    # Execute query
+    posts = query.all()
+
+    return render_template("main/posts.html", posts=posts)
+
+@main.route('/api/posts')
+def api_posts():
+    # Get query parameters
+    order = request.args.get('order', 'asc')
+    filter_by = request.args.get('filter_by', 'author')
+    filter_value = request.args.get('filter_value', '')
+
+    # Base query
+    query = Posts.query.join(User, Posts.author_id == User.id).join(Tag, Posts.tag_id == Tag.id)
+
+    # Apply filtering if filter_by and filter_value are provided
+    if filter_by and filter_value:
+        if filter_by == 'author':
+            query = query.filter((User.first_name.ilike(f'%{filter_value}%')) | (User.last_name.ilike(f'%{filter_value}%')))
+        elif filter_by == 'title':
+            query = query.filter(Posts.title.ilike(f'%{filter_value}%'))
+        elif filter_by == 'tag':
+            query = query.filter(Tag.tag.ilike(f'%{filter_value}%'))
+
+    # Apply sorting
+    if order == 'desc':
+        query = query.order_by(Posts.date_posted.desc())
+    else:
+        query = query.order_by(Posts.date_posted.asc())
+
+    # Execute query
+    posts = query.all()
+
+    # Serialize posts to JSON
+    posts_data = []
+    for post in posts:
+        post_data = {
+            'title': post.title,
+            'content': post.content,
+            'author_first_name': post.author.first_name,
+            'author_last_name': post.author.last_name,
+            'tag': post.tag.tag,
+            'date_posted': post.date_posted.strftime('%B %d, %Y')
+        }
+        posts_data.append(post_data)
+
+    return jsonify(posts_data)
+
+@main.route('/api/autocomplete_posts', methods=['GET'])
+def autocomplete_posts():
+    search = request.args.get('q')
+    filter_by = request.args.get('filter_by', 'author')
+
+    if not search:
+        return jsonify([])
+
+    if filter_by == 'author':
+        users = User.query.filter((User.first_name.ilike(f'%{search}%')) | (User.last_name.ilike(f'%{search}%'))).all()
+        suggestions = [f'{user.first_name} {user.last_name}' for user in users]
+    elif filter_by == 'title':
+        posts = Posts.query.filter(Posts.title.ilike(f'%{search}%')).all()
+        suggestions = [post.title for post in posts]
+    elif filter_by == 'tag':
+        tags = Tag.query.filter(Tag.tag.ilike(f'%{search}%')).all()
+        suggestions = [tag.tag for tag in tags]
+    else:
+        suggestions = []
+
+    return jsonify(suggestions)
