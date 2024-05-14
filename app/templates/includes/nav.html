@@ -1,5 +1,3 @@
-
-
 <header>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary p-0" style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
         <div class="container-fluid">
@@ -13,7 +11,7 @@
                         <a href="{{ url_for('main.add_post') }}" class="nav-link {{ 'active' if request.path == url_for('main.add_post') else '' }}">Create Post</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ url_for('main.forum') }}" class="nav-link {{ 'active' if request.path == url_for('main.forum') else '' }}">Forum Topics</a>
+                        <a href="{{ url_for('main.posts') }}" class="nav-link {{ 'active' if request.path == url_for('main.posts') else '' }}">Forum Topics</a>
                     </li>
                 </ul>
                 <!-- Search form -->

@@ -16,9 +16,6 @@ def index():
     login_status = session.get('logged_in', False)
     return render_template("index.html", login=login_status)
 
-@main.route("/forum")
-def forum():
-    return render_template("forum.html")
 
 @main.route("/mailcheck")
 def mailcheck():
@@ -69,12 +66,15 @@ def autocomplete():
 
 @main.route('/api/posts')
 def api_posts():
+    # Get query parameters
     order = request.args.get('order', 'asc')
     filter_by = request.args.get('filter_by', 'author')
     filter_value = request.args.get('filter_value', '')
 
+    # Base query
     query = Posts.query.join(User, Posts.author_id == User.id).join(Tag, Posts.tag_id == Tag.id)
 
+    # Apply filtering if filter_by and filter_value are provided
     if filter_by and filter_value:
         if filter_by == 'author':
             query = query.filter((User.first_name.ilike(f'%{filter_value}%')) | (User.last_name.ilike(f'%{filter_value}%')))
@@ -83,16 +83,20 @@ def api_posts():
         elif filter_by == 'tag':
             query = query.filter(Tag.tag.ilike(f'%{filter_value}%'))
 
+    # Apply sorting
     if order == 'desc':
         query = query.order_by(Posts.date_posted.desc())
     else:
         query = query.order_by(Posts.date_posted.asc())
 
+    # Execute query
     posts = query.all()
 
+    # Serialize posts to JSON
     posts_data = []
     for post in posts:
         post_data = {
+            'id': post.id,  # Ensure the ID is included in the response
             'title': post.title,
             'content': post.content,
             'author_first_name': post.author.first_name,

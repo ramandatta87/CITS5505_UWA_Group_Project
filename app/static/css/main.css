@@ -381,4 +381,7 @@ footer {
     text-decoration: underline;
 }
 
+.ui-autocomplete {
+  z-index: 1051; /* Bootstrap dropdown has a z-index of 1000 */
+}
   /* End Questions */
