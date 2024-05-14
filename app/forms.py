@@ -72,3 +72,8 @@ class FilterSortForm(FlaskForm):
     filter_value = StringField('Filter Value')
     order = SelectField('Order', choices=[('asc', 'Ascending'), ('desc', 'Descending')], validators=[DataRequired()])
     submit = SubmitField('Apply')    
+
+# Form for creating a reply
+class ReplyForm(FlaskForm):
+    answer = CKEditorField('Your Answer', validators=[DataRequired()])
+    submit = SubmitField('Submit')

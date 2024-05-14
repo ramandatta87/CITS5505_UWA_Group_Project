@@ -61,3 +61,21 @@ class Posts(db.Model):
     
     def __repr__(self):
         return f'<Posts {self.title}>'
+    
+# Reply Model
+class Reply(db.Model):
+    __tablename__ = "replies"
+
+    id = db.Column(db.Integer, primary_key=True)
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=False)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    answer = db.Column(db.Text, nullable=False)
+    answered_accepted = db.Column(db.Boolean, default=False)
+    deleted = db.Column(db.Boolean, default=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+    post = db.relationship('Posts', backref=db.backref('replies', lazy=True))
+    author = db.relationship('User', backref=db.backref('replies', lazy=True))
+
+    def __repr__(self):
+        return f'<Reply {self.id}>'

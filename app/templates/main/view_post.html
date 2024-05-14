@@ -17,17 +17,73 @@
     <p><strong>Posted on:</strong> {{ post.date_posted.strftime('%B %d, %Y') }}</p>
     <p><strong>Tag:</strong> {{ post.tag.tag }}</p>
     <br/>
-    <p>{{ post.content|safe }}</p>
+    <p>{{ post.content | safe }}</p>
 </div>
 
 {% if post.author_id == current_user.id %}
-<a href="{{ url_for('main.edit_post', post_id=post.id) }}" class="btn btn-secondary">Edit</a>
+<a href="{{ url_for('main.edit_post', post_id=post.id) }}" class="btn btn-secondary post-buttons">Edit</a>
 {% endif %}
 
 {% if request.args.get('origin') == 'my_posts' %}
-<a href="{{ url_for('main.my_posts') }}" class="btn btn-secondary">Back to My Posts</a>
+<a href="{{ url_for('main.my_posts') }}" class="btn btn-secondary post-buttons">Back to My Posts</a>
 {% else %}
-<a href="{{ url_for('main.posts') }}" class="btn btn-secondary">Back to All Posts</a>
+<a href="{{ url_for('main.posts') }}" class="btn btn-secondary post-buttons">Back to All Posts</a>
 {% endif %}
 
+<h2>Replies</h2>
+<ul class="list-group" id="replies-list">
+    {% for reply in replies %}
+    <li class="list-group-item" id="reply-{{ reply.id }}">
+        <div class="reply-content">
+            <p>{{ reply.answer|safe }}</p>
+            <small>by {{ reply.author.first_name }} {{ reply.author.last_name }} on {{ reply.timestamp.strftime('%B %d, %Y') }}</small>
+        </div>
+        <div class="reply-edit-form mt-2" style="display: none;">
+            <textarea class="form-control edit-reply-textarea ckeditor" data-reply-id="{{ reply.id }}">{{ reply.answer }}</textarea>
+            <button type="button" class="btn btn-primary save-reply-button mt-2" data-reply-id="{{ reply.id }}">Save</button>
+            <button type="button" class="btn btn-secondary cancel-edit-reply-button mt-2" data-reply-id="{{ reply.id }}">Cancel</button>
+        </div>
+        <div class="mt-2 reply-buttons">
+            {% if reply.author_id == current_user.id and not reply.answered_accepted %}
+            <button class="btn btn-warning btn-sm edit-reply-button" data-reply-id="{{ reply.id }}">Edit</button>
+            {% endif %}
+            {% if post.author_id == current_user.id %}
+                {% if not reply.answered_accepted %}
+                <button class="btn btn-success btn-sm answer-toggle-button" data-reply-id="{{ reply.id }}" data-action="accept">Accept Answer</button>
+                {% else %}
+                <button class="btn btn-danger btn-sm answer-toggle-button" data-reply-id="{{ reply.id }}" data-action="reject">Reject Answer</button>
+                {% endif %}
+            {% endif %}
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+
+<div id="reply-form" class="mt-4" style="display: none;">
+    <form method="POST" action="{{ url_for('main.view_post', post_id=post.id) }}">
+        {{ form.hidden_tag() }}
+        
+        <!-- Answer Field -->
+        <div class="mb-3">
+            {{ form.answer.label(class="form-label", for="answer") }}
+            {{ form.answer(class="form-control ckeditor", id="answer") }}
+        </div>
+
+        <!-- Submit and Cancel Buttons -->
+        <div class="mb-3">
+            {{ form.submit(class="btn btn-primary", id="submit") }}
+            <button type="button" id="cancel-reply" class="btn btn-secondary">Cancel</button>
+        </div>
+    </form>
+    {{ ckeditor.load() }}
+    {{ ckeditor.config(name='content') }}
+</div>
+
+<button id="reply-button" class="btn btn-primary post-buttons mt-4">Post Your Answer</button>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script src="{{ url_for('static', filename='js/view_post.js') }}"></script>
 {% endblock %}

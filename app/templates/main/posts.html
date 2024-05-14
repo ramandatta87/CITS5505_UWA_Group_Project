@@ -32,7 +32,7 @@
             {{ form.submit(class="btn btn-primary") }}
         </div>
     </form>
-
+    
     <!-- Posts List -->
     <ul class="list-group" id="posts-list">
         {% for post in posts %}
@@ -44,6 +44,8 @@
         </li>
         {% endfor %}
     </ul>
+    {{ ckeditor.load() }}
+    {{ ckeditor.config(name='content') }}
 </div>
 
 {% endblock %}

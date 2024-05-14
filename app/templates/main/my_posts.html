@@ -19,10 +19,11 @@
         <li class="list-group-item">
             <h5><a href="{{ url_for('main.view_post', post_id=post.id, origin='my_posts') }}">{{ post.title }}</a></h5>
             <p>by {{ current_user.first_name }} {{ current_user.last_name }} on {{ post.date_posted.strftime('%B %d, %Y') }}</p>
-            <p>{{ post.content |safe}}</p>
+            <p>{{ post.content | safe }}</p>
         </li>
         {% endfor %}
     </ul>
+
 </div>
 
 {% endblock %}
