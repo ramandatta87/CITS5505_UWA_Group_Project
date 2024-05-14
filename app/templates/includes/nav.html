@@ -1,4 +1,5 @@
 <header>
+    <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary p-0" style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
         <div class="container-fluid">
             <a class="navbar-brand" href="{{ url_for('main.index') }}">DevConnect</a>
@@ -15,8 +16,9 @@
                     </li>
                 </ul>
                 <!-- Search form -->
-                <form class="d-flex ms-auto">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <form class="d-flex ms-auto" method="GET" action="{{ url_for('main.search') }}">
+                    <!-- Retain search query in the input field after performing a search -->
+                    <input class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search" value="{{ request.args.get('q', '') }}">
                     <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
                 {% if 'logged_in' in session and session['logged_in'] %}

@@ -223,30 +223,47 @@ def edit_post(post_id):
 
     return render_template('main/edit_post.html', title='Edit Post', form=form, post=post)
 
-@main.route('/posts', methods=['GET', 'POST'])
+@main.route("/posts", methods=["GET", "POST"])
 def posts():
     form = FilterSortForm()
     query = Posts.query
 
-    if form.validate_on_submit():
-        filter_by = form.filter_by.data
-        filter_value = form.filter_value.data
-        order = form.order.data
+    search_query = request.args.get('q', '')
 
-        if filter_by == 'author':
-            query = query.join(User).filter(User.first_name.contains(filter_value) | User.last_name.contains(filter_value))
-        elif filter_by == 'title':
-            query = query.filter(Posts.title.contains(filter_value))
-        elif filter_by == 'tag':
-            query = query.join(Tag).filter(Tag.tag.contains(filter_value))
-
-        if order == 'asc':
-            query = query.order_by(Posts.date_posted.asc())
+    if search_query:
+        if search_query.startswith('[') and search_query.endswith(']'):
+            tag_name = search_query[1:-1]
+            tag = Tag.query.filter(Tag.tag.ilike(f'%{tag_name}%')).first()
+            if tag:
+                query = query.filter_by(tag_id=tag.id)
+            else:
+                query = query.filter_by(id=None)  # No results
         else:
-            query = query.order_by(Posts.date_posted.desc())
+            query = query.filter(
+                (Posts.title.ilike(f'%{search_query}%')) |
+                (Posts.content.ilike(f'%{search_query}%'))
+            )
+    else:
+        if form.validate_on_submit():
+            filter_by = form.filter_by.data
+            filter_value = form.filter_value.data
+            order = form.order.data
+
+            if filter_by == 'author':
+                query = query.join(User).filter(User.first_name.contains(filter_value) | User.last_name.contains(filter_value))
+            elif filter_by == 'title':
+                query = query.filter(Posts.title.contains(filter_value))
+            elif filter_by == 'tag':
+                query = query.join(Tag).filter(Tag.tag.contains(filter_value))
+
+            if order == 'asc':
+                query = query.order_by(Posts.date_posted.asc())
+            else:
+                query = query.order_by(Posts.date_posted.desc())
 
     posts = query.all()
-    return render_template('main/posts.html', form=form, posts=posts)
+    return render_template('main/posts.html', form=form, posts=posts, search_query=search_query)
+
 
 @main.route('/post/<int:post_id>/reply', methods=['GET', 'POST'])
 @login_required
@@ -268,3 +285,37 @@ def reply(post_id):
         return redirect(url_for('main.view_post', post_id=post_id))
 
     return render_template('main/reply.html', title='Reply to Post', form=form, post=post)
+
+@main.route("/search", methods=["GET"])
+def search():
+    query = request.args.get('q', '')
+    search_results = []
+
+    # Check if the query includes a tag (e.g., [tag] keyword)
+    tag = None
+    keyword = query
+    if query.startswith('[') and ']' in query:
+        tag_part = query.split(']')[0] + ']'
+        keyword_part = query.split(']')[1].strip()
+
+        # Extract tag name from brackets and trim whitespace
+        tag_name = tag_part[1:-1].strip()
+        tag = Tag.query.filter(Tag.tag.ilike(f'%{tag_name}%')).first()
+        keyword = keyword_part
+
+    if tag:
+        # Search for posts by tag and keyword
+        search_results = Posts.query.filter(
+            Posts.tag_id == tag.id,
+            (Posts.title.ilike(f'%{keyword}%')) | 
+            (Posts.content.ilike(f'%{keyword}%'))
+        ).all()
+    else:
+        # General search for titles and content
+        search_results = Posts.query.filter(
+            (Posts.title.ilike(f'%{query}%')) | 
+            (Posts.content.ilike(f'%{query}%'))
+        ).all()
+
+    form = FilterSortForm()
+    return render_template('main/posts.html', form=form, posts=search_results, search_query=query)
