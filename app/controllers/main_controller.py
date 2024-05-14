@@ -183,3 +183,14 @@ def my_posts():
     user_posts = Posts.query.filter_by(author_id=current_user.id).order_by(Posts.date_posted.desc()).all()
     # Render the my_posts.html template with the user's posts
     return render_template('main/my_posts.html', posts=user_posts)
+
+# Route to view a single post by ID
+@main.route('/post/<int:post_id>')
+@login_required
+def view_post(post_id):
+    # Fetch the post by ID, return 404 if not found
+    post = Posts.query.get_or_404(post_id)
+    # Fetch the author of the post
+    author = User.query.get_or_404(post.author_id)
+    # Render the view_post.html template with the post and author details
+    return render_template('main/view_post.html', post=post, author=author)
