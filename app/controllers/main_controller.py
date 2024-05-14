@@ -174,3 +174,12 @@ def autocomplete_posts():
         suggestions = []
 
     return jsonify(suggestions)
+
+# Route to display the logged-in user's posts
+@main.route('/my_posts')
+@login_required  # Ensures that only logged-in users can access this route
+def my_posts():
+    # Query to get posts by the current logged-in user, ordered by the date posted
+    user_posts = Posts.query.filter_by(author_id=current_user.id).order_by(Posts.date_posted.desc()).all()
+    # Render the my_posts.html template with the user's posts
+    return render_template('main/my_posts.html', posts=user_posts)
