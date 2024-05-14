@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session, flash, redirect, url_for, request, Response, jsonify
+from flask import Blueprint, render_template, session, flash, redirect, url_for, request, Response, jsonify,json
 from flask_mail import Message
 from app import mail, db
 import datetime
