@@ -1,6 +1,6 @@
-from flask import Blueprint, render_template, session,flash, redirect, url_for
+from flask import Blueprint, render_template, session,flash, redirect, url_for, request, Response, json
 from flask_mail import  Message
-from app import mail,db
+from app import mail, db
 import datetime         #Importing for mail date & time
 from flask_login import current_user, login_required
 from app.forms import PostForm
@@ -70,3 +70,11 @@ def add_post():
         return redirect(url_for('main.add_post'))
     
     return render_template("/main/add_post.html", form=form)
+
+@main.route('/autocomplete', methods=['GET'])
+def autocomplete():
+    search = request.args.get('term')
+    results = db.session.query(Tag.tag).filter(Tag.tag.like(f'%{search}%')).all()
+    results = [result[0] for result in results]  # Extract names from tuples
+    #app.logger.debug(results)
+    return Response(json.dumps(results), mimetype='application/json')
