@@ -1,31 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{% block title %}CSSE DevConnect - Where Developers Learn, Share, &amp; Build Careers{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CSSE DevConnect{% endblock %}</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}"/>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 </head>
 <body>
 
 <div class="container">
     {% include "includes/nav.html" %}
-
-    {% block content %}
-    {% endblock %}
-
-    {% include "includes/footer.html" %}
+    <div class="row">
+        {% if current_user.is_authenticated %}
+        <!-- Sidebar Section -->
+        <div class="col-md-3">
+            <div class="sidebar">
+                <h3>My Dashboard</h3>
+                <ul class="list-group">
+                    <li class="list-group-item"><a href="{{ url_for('main.posts') }}">My Posts</a></li>
+                    
+                    <li class="list-group-item"><a href="{{ url_for('auth.profile') }}">Profile</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-9">
+        {% else %}
+        <div class="col-md-12">
+        {% endif %}
+            {% block content %}{% endblock %}
+        </div>
+    </div>
 </div>
 
+{% block scripts %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-{% block scripts %}
 {% endblock %}
+
 </body>
 </html>
