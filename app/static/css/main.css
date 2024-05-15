@@ -356,4 +356,32 @@ footer {
       padding: 0;
     }
   }
+
+  .sidebar {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.sidebar h3 {
+    margin-bottom: 15px;
+}
+
+.sidebar .list-group-item {
+    border: none;
+    padding: 10px 15px;
+}
+
+.sidebar .list-group-item a {
+    text-decoration: none;
+    color: #333;
+}
+
+.sidebar .list-group-item a:hover {
+    text-decoration: underline;
+}
+
+.ui-autocomplete {
+  z-index: 1051; /* Bootstrap dropdown has a z-index of 1000 */
+}
   /* End Questions */

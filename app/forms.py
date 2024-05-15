@@ -1,8 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, TextAreaField, BooleanField, SubmitField, SelectField,PasswordField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
+from flask_ckeditor import CKEditor,CKEditorField
 
-
+# Form for user registration
 class RegisterForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired()])
     last_name = StringField('Last Name', validators=[DataRequired()])
@@ -13,12 +14,13 @@ class RegisterForm(FlaskForm):
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Register')
 
+# Form for user login
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email(message='Enter a valid email.')])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Login')
 
-
+ #Form for users who forgot their password
 class ForgetPasswordForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired()])
     uwa_id = StringField('UWA ID', validators=[DataRequired()])
@@ -33,6 +35,7 @@ class ForgetPasswordForm(FlaskForm):
     ])
     submit = SubmitField('Submit')
 
+# Form for changing password
 class ChangePasswordForm(FlaskForm):
     old_password = PasswordField('Old Password', validators=[DataRequired()])
     new_password = PasswordField('New Password', [
@@ -45,7 +48,32 @@ class ChangePasswordForm(FlaskForm):
     ])
     submit = SubmitField('Change Password')
 
+# Form for editing user profile
 class EditProfileForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired()])
     last_name = StringField('Last Name', validators=[DataRequired()])
     major = StringField('Major', validators=[DataRequired()])
+
+
+# Form for creating and editing posts
+class PostForm(FlaskForm):
+    title = StringField("Title", validators=[DataRequired()])
+    content = CKEditorField('Content', validators=[DataRequired()])
+    # StringField for entering a tag
+    tag = StringField('Tag', validators=[DataRequired()])
+    # Boolean field for indicating if the post is related to career preparation
+    career_preparation = BooleanField('Career Preparation')
+    submit = SubmitField("Submit") 
+
+
+# Form for Filter 
+class FilterSortForm(FlaskForm):
+    filter_by = SelectField('Filter By', choices=[('author', 'Author'), ('title', 'Title'), ('tag', 'Tag')], validators=[DataRequired()])
+    filter_value = StringField('Filter Value')
+    order = SelectField('Order', choices=[('asc', 'Ascending'), ('desc', 'Descending')], validators=[DataRequired()])
+    submit = SubmitField('Apply')    
+
+# Form for creating a reply
+class ReplyForm(FlaskForm):
+    answer = CKEditorField('Your Answer', validators=[DataRequired()])
+    submit = SubmitField('Submit')

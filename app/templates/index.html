@@ -1,68 +1,70 @@
 {% extends "includes/layout.html" %}
 
+{% block title %}Welcome to CSSE DevConnect{% endblock %}
+
 {% block content %}
 <!-- Correct linking of CSS file using url_for -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
 
-<section class="welcome">
+<section class="welcome mt-4">
     <div class="row">
         <div class="col-md-12 text-center">
-            <h1>Welcome to CSSE DevConnect.</h1>
+            <h1 class="display-4">Welcome to CSSE DevConnect.</h1>
             {% if login %}
-            <h3>Let's get started.</h3>
+                <h3>Let's get started.</h3>
             {% else %}
-            <p>Already registered? <a href="{{ url_for('auth.login') }}">Login</a></p>
+                <p class="lead">Already registered? <a href="{{ url_for('auth.login') }}">Login</a></p>
             {% endif %}
         </div>
     </div>
 </section>
 
-<section class="questions">
-    <div class="container-term">
+<section class="questions mt-5">
+    <div class="container">
         <div class="questions-content">
-            <div class="questions-header">
+            <div class="questions-header text-center mb-4">
                 <h3 class="question-title">Quick search on <span>CSSE DevConnect</span></h3>
             </div>
-            <div class="questions-body">
-                <div class="questions-body-items">
-                    <div class="questions-body-item" data-id="0">
-                        <img src="https://cdn.sstatic.net/Img/home/ask-a-question.svg?v=f4f2050b0297" alt="" class="question-item-icon">
-                        <div class="question-item-text">Ask a question</div>
-                        <div class="question-arrow-right"></div>
+            <div class="questions-body row text-center">
+                <div class="col-md-4">
+                    <div class="questions-body-item p-3">
+                        <img src="https://cdn.sstatic.net/Img/home/ask-a-question.svg?v=f4f2050b0297" alt="" class="question-item-icon mb-2" style="width: 50px; height: 50px;">
+                        <div class="question-item-text"><a href="{{ url_for('main.add_post') }}">Ask Question</a></div>
                     </div>
-                    <div class="questions-body-item" data-id="1">
-                        <img src="https://cdn.sstatic.net/Img/home/votes.svg?v=748a8f48a8e2" alt="" class="question-item-icon">
+                </div>
+                <div class="col-md-4">
+                    <div class="questions-body-item p-3">
+                        <img src="https://cdn.sstatic.net/Img/home/votes.svg?v=748a8f48a8e2" alt="" class="question-item-icon mb-2" style="width: 50px; height: 50px;">
                         <div class="question-item-text">Vote on everything</div>
-                        <div class="question-arrow-right"></div>
                     </div>
-                    <div class="questions-body-item" data-id="2">
-                        <img src="https://cdn.sstatic.net/Img/home/answer.svg?v=4cd8048a676c" alt="" class="question-item-icon">
+                </div>
+                <div class="col-md-4">
+                    <div class="questions-body-item p-3">
+                        <img src="https://cdn.sstatic.net/Img/home/answer.svg?v=4cd8048a676c" alt="" class="question-item-icon mb-2" style="width: 50px; height: 50px;">
                         <div class="question-item-text">Answer questions</div>
-                        <div class="question-arrow-right"></div>
                     </div>
                 </div>
-                <div class="questions-body-item-content">
-                    <img src="https://cdn.sstatic.net/Img/home/illo-feats-vote.svg?v=9d2eb0efdc17" alt="" class="question-item-content-img">
-                    <h4 class="question-item-content-text">
-                        Accept the answer which solved your problem to let others benefit from the valuable information.
-                    </h4>
-                    <a href="{{ url_for('auth.register') }}" class="btn question-item-content-btn">Create an account</a>
-                </div>
+            </div>
+            <div class="questions-body-item-content text-center mt-4">
+                <img src="https://cdn.sstatic.net/Img/home/illo-feats-vote.svg?v=9d2eb0efdc17" alt="" class="question-item-content-img mb-3" style="width: 100px; height: 100px;">
+                <h4 class="question-item-content-text">
+                    Accept the answer which solved your problem to let others benefit from the valuable information.
+                </h4>
+                <a href="{{ url_for('auth.register') }}" class="btn btn-primary mt-3">Create an account</a>
             </div>
         </div>
     </div>
 </section>
 
-<section class="hr">
-    <div class="hero-content">
+<section class="hero mt-5">
+    <div class="hero-content text-center">
         <h1 class="hero-title">We <span>CSSE</span> people who help</h1>
         <p class="hero-paragraph">
             We help you get answers to your toughest coding questions, share knowledge with your coworkers, and find your achievements here by joining our community.
         </p>
-        <div class="hero-options">
-            <!-- Ensure these buttons link to actual Flask routes or functionality -->
-            <a href="#" class="btn btn-unit-question">Unit Questions</a>
-            <a href="#" class="btn btn-career-prep">Career preparation</a>
+        <div class="hero-options mt-4">
+            <a href="#" class="btn btn-outline-primary me-2">Unit Questions</a>
+            <a href="#" class="btn btn-outline-secondary">Career preparation</a>
         </div>
     </div>
 </section>
