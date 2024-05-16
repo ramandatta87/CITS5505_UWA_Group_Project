@@ -1,8 +1,7 @@
 <header>
-    <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary p-0" style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{{ url_for('main.index') }}">DevConnect</a>
+            <a class="navbar-brand" href="{{ url_for('main.posts') }}">DevConnect</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -12,12 +11,11 @@
                         <a href="{{ url_for('main.add_post') }}" class="nav-link {{ 'active' if request.path == url_for('main.add_post') else '' }}">Create Post</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ url_for('main.posts') }}" class="nav-link {{ 'active' if request.path == url_for('main.posts') else '' }}">Forum Topics</a>
+                        <a href="{{ url_for('main.about') }}" class="nav-link {{ 'active' if request.path == url_for('main.about') else '' }}">About</a>
                     </li>
                 </ul>
                 <!-- Search form -->
                 <form class="d-flex ms-auto" method="GET" action="{{ url_for('main.search') }}">
-                    <!-- Retain search query in the input field after performing a search -->
                     <input class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search" value="{{ request.args.get('q', '') }}">
                     <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
@@ -31,6 +29,7 @@
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
                                 <li><a class="dropdown-item" href="{{ url_for('auth.profile') }}">Profile</a></li>
                                 <li><a class="dropdown-item" href="{{ url_for('auth.change_password') }}">Change Password</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('main.my_favorites') }}">My Favorites</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a></li>
                             </ul>

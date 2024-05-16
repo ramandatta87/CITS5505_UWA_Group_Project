@@ -1,11 +1,14 @@
 $(document).ready(function() {
     function loadPosts() {
-        // Get the selected order value
+        // Get form values
         var order = $('#order').val();
+
+        // Determine the URL to make the AJAX request based on the current page
+        var url = window.location.pathname.includes('my_answers') ? "/api/my_answers_posts" : "/api/posts";
 
         // Make AJAX request
         $.ajax({
-            url: "/api/posts",
+            url: url,
             data: {
                 order: order
             },
@@ -20,9 +23,9 @@ $(document).ready(function() {
                             <h5><a href="/post/${post.id}">${post.title}</a></h5>
                             <p>by ${post.author_first_name} ${post.author_last_name} on ${post.date_posted}</p>
                             <p>Tag: ${post.tag}</p>
-                            <p>${post.career_preparation ? 'Career Preparation' : 'Unit'}</p>
-                            ${post.answered ? '<p>Answered</p>' : ''}
                             <p>${post.content}</p>
+                            ${post.answered ? '<p><strong>Answered</strong></p>' : ''}
+                            <p><strong>${post.career_preparation ? 'Career Preparation' : 'Unit'}</strong></p>
                         </li>
                     `;
                     $('#posts-list').append(postItem);
@@ -34,7 +37,7 @@ $(document).ready(function() {
     // Load posts on page load
     loadPosts();
 
-    // Trigger AJAX request on order change
+    // Trigger AJAX request on change
     $('#order').on('change', function() {
         loadPosts();
     });

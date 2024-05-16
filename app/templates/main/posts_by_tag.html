@@ -1,0 +1,20 @@
+{% extends "includes/layout.html" %}
+{% block title %}Posts tagged with {{ tag.tag }}{% endblock %}
+{% block content %}
+<div class="posts">
+    <h1>Posts tagged with "{{ tag.tag }}"</h1>
+    <ul class="list-group">
+        {% for post in posts %}
+        <li class="list-group-item">
+            <h5><a href="{{ url_for('main.view_post', post_id=tag.id) }}">{{ post.title }}</a></h5>
+            <p>by {{ post.author.first_name }} {{ post.author.last_name }} on {{ post.date_posted.strftime('%B %d, %Y') }}</p>
+            <p>{{ post.content | safe }}</p>
+            <p>Tag: {{ post.tag.tag if post.tag else 'N/A' }}</p>
+        </li>
+        {% endfor %}
+        {% if not posts %}
+        <li class="list-group-item">No posts found for this tag.</li>
+        {% endif %}
+    </ul>
+</div>
+{% endblock %}

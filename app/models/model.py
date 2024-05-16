@@ -79,3 +79,14 @@ class Reply(db.Model):
 
     def __repr__(self):
         return f'<Reply {self.id}>'
+    
+# Favourite Post Model
+
+class FavoritePost(db.Model):
+    __tablename__ = "favorite_posts"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=False)
+
+    user = db.relationship('User', backref=db.backref('favorites', lazy=True))
+    post = db.relationship('Posts', backref=db.backref('favorited_by', lazy=True))

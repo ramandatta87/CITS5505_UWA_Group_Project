@@ -1,10 +1,11 @@
-from flask import Blueprint, render_template, session, flash, redirect, url_for, request, Response, jsonify,json
+from flask import Blueprint, render_template, session, flash, redirect, url_for, request, Response, jsonify,json,g 
 from flask_mail import Message
 from app import mail, db
 import datetime
 from flask_login import current_user, login_required
-from app.forms import PostForm, FilterSortForm, ReplyForm
-from app.models.model import Posts, Tag, User, Reply
+from app.forms import PostForm, FilterSortForm, ReplyForm, FilterSortForm
+from app.models.model import Posts, Tag, User, Reply, FavoritePost
+from sqlalchemy import func
 
 # Define a Blueprint named 'main' for organizing routes and views
 main = Blueprint('main', __name__)
@@ -13,8 +14,14 @@ main = Blueprint('main', __name__)
 @main.route("/index")
 @main.route("/home")
 def index():
-    login_status = session.get('logged_in', False)
-    return render_template("index.html", login=login_status)
+    # Check if the user is logged in
+    if current_user.is_authenticated:
+        # If logged in, redirect to the posts page
+        return redirect(url_for('main.posts'))
+    else:
+        # If not logged in, render the index page
+        login_status = session.get('logged_in', False)
+        return render_template("index.html", login=login_status)
 
 
 @main.route("/mailcheck")
@@ -319,3 +326,133 @@ def search():
 
     form = FilterSortForm()
     return render_template('main/posts.html', form=form, posts=search_results, search_query=query)
+
+
+# Route to mark/unmark a post as favorite
+@main.route('/favorite_post/<int:post_id>', methods=['POST'])
+@login_required
+def favorite_post(post_id):
+    post = Posts.query.get_or_404(post_id)
+    favorite = FavoritePost.query.filter_by(user_id=current_user.id, post_id=post_id).first()
+
+    if favorite:
+        # If the post is already a favorite, remove it
+        db.session.delete(favorite)
+        db.session.commit()
+        flash('Post removed from favorites', 'info')
+    else:
+        # Add post to favorites
+        new_favorite = FavoritePost(user_id=current_user.id, post_id=post_id)
+        db.session.add(new_favorite)
+        db.session.commit()
+        flash('Post added to favorites', 'success')
+
+    return redirect(url_for('main.view_post', post_id=post_id))
+
+# Route to display the logged-in user's favorite posts
+@main.route('/my_favorites')
+@login_required
+def my_favorites():
+    favorite_posts = FavoritePost.query.filter_by(user_id=current_user.id).all()
+    posts = [favorite.post for favorite in favorite_posts]
+    return render_template('main/my_favorites.html', posts=posts)
+
+# Route to display About Page
+@main.route('/about')
+def about():
+    
+    return render_template('main/about.html')
+
+# Route to display My Answered Post
+@main.route('/my_answers')
+@login_required
+def my_answers():
+    form = FilterSortForm()
+    posts_with_my_replies = (
+        db.session.query(Posts)
+        .join(Reply, Posts.id == Reply.post_id)
+        .filter(Reply.author_id == current_user.id)
+        .all()
+    )
+    return render_template('main/my_answers.html', posts=posts_with_my_replies, form=form)
+
+# API Endpoint for My Answers
+@main.route('/api/my_answers_posts', methods=['GET'])
+@login_required
+def api_my_answers_posts():
+    order = request.args.get('order', 'asc')
+
+    query = (
+        db.session.query(Posts)
+        .join(Reply, Posts.id == Reply.post_id)
+        .filter(Reply.author_id == current_user.id)
+    )
+
+    if order == 'desc':
+        query = query.order_by(Posts.date_posted.desc())
+    else:
+        query = query.order_by(Posts.date_posted.asc())
+
+    posts = query.all()
+
+    posts_data = []
+    for post in posts:
+        post_data = {
+            'id': post.id,
+            'title': post.title,
+            'content': post.content,
+            'author_first_name': post.author.first_name,
+            'author_last_name': post.author.last_name,
+            'tag': post.tag.tag,
+            'date_posted': post.date_posted.strftime('%B %d, %Y'),
+            'answered': post.answered,
+            'career_preparation': post.career_preparation
+        }
+        posts_data.append(post_data)
+
+    return jsonify(posts_data)
+
+# Route for Tag
+@main.route("/tags")
+@login_required
+def tags():
+    tags_with_counts = db.session.query(
+        Tag.id,
+        Tag.tag,
+        func.count(Posts.id).label('post_count')
+    ).join(Posts, Posts.tag_id == Tag.id).group_by(Tag.id).all()
+
+    return render_template("main/tags.html", tags=tags_with_counts)
+
+@main.route("/tag/<int:tag_id>")
+@login_required
+def posts_by_tag(tag_id):
+    tag = Tag.query.get_or_404(tag_id)
+    posts = Posts.query.filter_by(tag_id=tag_id).all()
+    return render_template("main/posts_by_tag.html", tag=tag, posts=posts)
+
+@main.before_app_request
+def add_tags_to_sidebar():
+    if current_user.is_authenticated:
+        tags_with_counts = db.session.query(
+            Tag.id,
+            Tag.tag,
+            func.count(Posts.id).label('post_count')
+        ).join(Posts, Posts.tag_id == Tag.id).group_by(Tag.id).all()
+        g.tags = tags_with_counts
+    else:
+        g.tags = []
+
+# Route for Career Preparation
+@main.route("/career")
+@login_required
+def career():
+    career_posts = Posts.query.filter_by(career_preparation=True).all()
+    return render_template("main/career.html", posts=career_posts)
+
+# Route for Unit Preparation
+@main.route("/uni_preparation")
+@login_required
+def uni_preparation():
+    uni_preparation_posts = Posts.query.filter_by(career_preparation=False).all()
+    return render_template("main/uni_preparation.html", posts=uni_preparation_posts)

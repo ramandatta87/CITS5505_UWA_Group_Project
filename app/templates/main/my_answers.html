@@ -1,5 +1,5 @@
 {% extends "includes/layout.html" %}
-{% block title %}Posts{% endblock %}
+{% block title %}My Answers{% endblock %}
 {% block content %}
 
 <!-- Display Flash Messages -->
@@ -10,11 +10,11 @@
 </div>
 {% endfor %}
 
-<h1>Posts{% if search_query %} - {{ search_query }}{% endif %}</h1>
+<h1>My Answers{% if search_query %} - Search Results for "{{ search_query }}"{% endif %}</h1>
 <br/>
 <div class="shadow p-3 mb-5 bg-body rounded">
-    <!-- Sort Form -->
-    <form id="filter-sort-form" method="POST" action="{{ url_for('main.posts') }}" class="mb-4">
+    <!-- Filter and Sort Form -->
+    <form id="filter-sort-form" method="POST" action="{{ url_for('main.my_answers') }}" class="mb-4">
         {{ form.hidden_tag() }}
         <div class="mb-3">
             {{ form.order.label(class="form-label") }}
@@ -26,25 +26,22 @@
     <ul class="list-group" id="posts-list">
         {% for post in posts %}
         <li class="list-group-item">
-            <h5><a href="{{ url_for('main.view_post', post_id=post.id, origin='posts') }}">{{ post.title }}</a></h5>
+            <h5><a href="{{ url_for('main.view_post', post_id=post.id, origin='my_answers') }}">{{ post.title }}</a></h5>
             <p>by {{ post.author.first_name }} {{ post.author.last_name }} on {{ post.date_posted.strftime('%B %d, %Y') }}</p>
             <p>Tag: {{ post.tag.tag if post.tag else 'N/A' }}</p>
             <p>{{ post.content|safe }}</p>
+            {% if post.answered %}<p><strong>Answered</strong></p>{% endif %}
+            <p><strong>{{ 'Career Preparation' if post.career_preparation else 'Unit' }}</strong></p>
         </li>
         {% endfor %}
         {% if not posts %}
         <li class="list-group-item">No posts found.</li>
         {% endif %}
     </ul>
-    {{ ckeditor.load() }}
-    {{ ckeditor.config(name='content') }}
 </div>
 
 {% endblock %}
 
 {% block scripts %}
-<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js" integrity="sha256-J8ay84czFazJ9wcTuSDLpPmwpMXOm573OUtZHPQqpEU=" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<script src="{{ url_for('static', filename='js/posts.js') }}"></script>
+<script src="{{ url_for('static', filename='js/myanswer.js') }}"></script>
 {% endblock %}
