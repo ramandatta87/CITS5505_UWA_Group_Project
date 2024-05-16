@@ -63,9 +63,10 @@ def add_post():
         db.session.commit()
 
         flash("Blog Post Submitted Successfully")
-        return redirect(url_for('main.add_post'))
+        return redirect(url_for('main.view_post', post_id=post.id))  # Redirect to the newly created post
 
     return render_template("/main/add_post.html", form=form)
+
 
 
 
