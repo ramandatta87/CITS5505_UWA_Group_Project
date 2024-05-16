@@ -443,8 +443,16 @@ def add_tags_to_sidebar():
     else:
         g.tags = []
 
+# Route for Career Preparation
 @main.route("/career")
 @login_required
 def career():
     career_posts = Posts.query.filter_by(career_preparation=True).all()
     return render_template("main/career.html", posts=career_posts)
+
+# Route for Unit Preparation
+@main.route("/uni_preparation")
+@login_required
+def uni_preparation():
+    uni_preparation_posts = Posts.query.filter_by(career_preparation=False).all()
+    return render_template("main/uni_preparation.html", posts=uni_preparation_posts)

@@ -1,0 +1,41 @@
+{% extends "includes/layout.html" %}
+{% block title %}Uni Preparation Posts{% endblock %}
+{% block content %}
+
+<!-- Display Flash Messages -->
+{% for message in get_flashed_messages() %}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+
+<h1>Uni Preparation Posts</h1>
+<br/>
+<div class="shadow p-3 mb-5 bg-body rounded">
+    <!-- Posts List -->
+    <ul class="list-group" id="posts-list">
+        {% for post in posts %}
+        <li class="list-group-item">
+            <h5><a href="{{ url_for('main.view_post', post_id=post.id) }}">{{ post.title }}</a></h5>
+            <p>by {{ post.author.first_name }} {{ post.author.last_name }} on {{ post.date_posted.strftime('%B %d, %Y') }}</p>
+            <p>Tag: {{ post.tag.tag if post.tag else 'N/A' }}</p>
+            <p>{{ post.content|safe }}</p>
+            {% if post.answered %}
+            <p><strong>Answered</strong></p>
+            {% endif %}
+        </li>
+        {% endfor %}
+        {% if not posts %}
+        <li class="list-group-item">No uni preparation posts found.</li>
+        {% endif %}
+    </ul>
+    {{ ckeditor.load() }}
+    {{ ckeditor.config(name='content') }}
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/posts.js') }}"></script>
+{% endblock %}
