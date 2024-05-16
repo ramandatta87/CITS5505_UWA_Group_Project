@@ -13,23 +13,14 @@
 <h1>Posts{% if search_query %} - Search Results for "{{ search_query }}"{% endif %}</h1>
 <br/>
 <div class="shadow p-3 mb-5 bg-body rounded">
-    <!-- Filter and Sort Form -->
-    <form id="filter-sort-form" method="POST" action="{{ url_for('main.posts') }}" class="mb-4">
-        {{ form.hidden_tag() }}
+    <!-- Sort Form -->
+    <form id="filter-sort-form" class="mb-4">
         <div class="mb-3">
-            {{ form.filter_by.label(class="form-label") }}
-            {{ form.filter_by(class="form-control", id="filter_by") }}
-        </div>
-        <div class="mb-3">
-            {{ form.filter_value.label(class="form-label") }}
-            {{ form.filter_value(class="form-control", id="filter_value") }}
-        </div>
-        <div class="mb-3">
-            {{ form.order.label(class="form-label") }}
-            {{ form.order(class="form-control", id="order") }}
-        </div>
-        <div class="mb-3">
-            {{ form.submit(class="btn btn-primary") }}
+            <label for="order" class="form-label">Order By</label>
+            <select id="order" class="form-control">
+                <option value="asc">Newest</option>
+                <option value="desc">Oldest</option>
+            </select>
         </div>
     </form>
     
@@ -40,6 +31,10 @@
             <h5><a href="{{ url_for('main.view_post', post_id=post.id, origin='posts') }}">{{ post.title }}</a></h5>
             <p>by {{ post.author.first_name }} {{ post.author.last_name }} on {{ post.date_posted.strftime('%B %d, %Y') }}</p>
             <p>Tag: {{ post.tag.tag if post.tag else 'N/A' }}</p>
+            <p>{{ post.career_preparation == 0 and 'Unit' or 'Career Preparation' }}</p>
+            {% if post.answered %}
+            <p>Answered</p>
+            {% endif %}
             <p>{{ post.content|safe }}</p>
         </li>
         {% endfor %}
@@ -54,5 +49,8 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js" integrity="sha256-J8ay84czFazJ9wcTuSDLpPmwpMXOm573OUtZHPQqpEU=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="{{ url_for('static', filename='js/posts.js') }}"></script>
 {% endblock %}

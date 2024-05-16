@@ -349,3 +349,9 @@ def my_favorites():
     favorite_posts = FavoritePost.query.filter_by(user_id=current_user.id).all()
     posts = [favorite.post for favorite in favorite_posts]
     return render_template('main/my_favorites.html', posts=posts)
+
+# Route to display About Page
+@main.route('/about')
+def about():
+    
+    return render_template('main/about.html')

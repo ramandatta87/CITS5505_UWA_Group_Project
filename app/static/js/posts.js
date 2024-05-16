@@ -1,16 +1,12 @@
 $(document).ready(function() {
     function loadPosts() {
-        // Get form values
-        var filter_by = $('#filter_by').val();
-        var filter_value = $('#filter_value').val();
+        // Get the selected order value
         var order = $('#order').val();
 
         // Make AJAX request
         $.ajax({
             url: "/api/posts",
             data: {
-                filter_by: filter_by,
-                filter_value: filter_value,
                 order: order
             },
             success: function(data) {
@@ -24,6 +20,8 @@ $(document).ready(function() {
                             <h5><a href="/post/${post.id}">${post.title}</a></h5>
                             <p>by ${post.author_first_name} ${post.author_last_name} on ${post.date_posted}</p>
                             <p>Tag: ${post.tag}</p>
+                            <p>${post.career_preparation ? 'Career Preparation' : 'Unit'}</p>
+                            ${post.answered ? '<p>Answered</p>' : ''}
                             <p>${post.content}</p>
                         </li>
                     `;
@@ -36,25 +34,8 @@ $(document).ready(function() {
     // Load posts on page load
     loadPosts();
 
-    // Trigger AJAX request on change
-    $('#filter_by, #filter_value, #order').on('change input', function() {
+    // Trigger AJAX request on order change
+    $('#order').on('change', function() {
         loadPosts();
-    });
-
-    // Autocomplete for filter value
-    $('#filter_value').autocomplete({
-        source: function(request, response) {
-            $.ajax({
-                url: "/api/autocomplete_posts",
-                data: {
-                    q: request.term,
-                    filter_by: $('#filter_by').val()
-                },
-                success: function(data) {
-                    response(data);
-                }
-            });
-        },
-        minLength: 2
     });
 });
