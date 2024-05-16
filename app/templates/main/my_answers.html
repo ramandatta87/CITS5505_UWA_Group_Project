@@ -1,0 +1,47 @@
+{% extends "includes/layout.html" %}
+{% block title %}My Answers{% endblock %}
+{% block content %}
+
+<!-- Display Flash Messages -->
+{% for message in get_flashed_messages() %}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+
+<h1>My Answers{% if search_query %} - Search Results for "{{ search_query }}"{% endif %}</h1>
+<br/>
+<div class="shadow p-3 mb-5 bg-body rounded">
+    <!-- Filter and Sort Form -->
+    <form id="filter-sort-form" method="POST" action="{{ url_for('main.my_answers') }}" class="mb-4">
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+            {{ form.order.label(class="form-label") }}
+            {{ form.order(class="form-control", id="order") }}
+        </div>
+    </form>
+    
+    <!-- Posts List -->
+    <ul class="list-group" id="posts-list">
+        {% for post in posts %}
+        <li class="list-group-item">
+            <h5><a href="{{ url_for('main.view_post', post_id=post.id, origin='my_answers') }}">{{ post.title }}</a></h5>
+            <p>by {{ post.author.first_name }} {{ post.author.last_name }} on {{ post.date_posted.strftime('%B %d, %Y') }}</p>
+            <p>Tag: {{ post.tag.tag if post.tag else 'N/A' }}</p>
+            <p>{{ post.content|safe }}</p>
+            {% if post.answered %}<p><strong>Answered</strong></p>{% endif %}
+            <p><strong>{{ 'Career Preparation' if post.career_preparation else 'Unit' }}</strong></p>
+        </li>
+        {% endfor %}
+        {% if not posts %}
+        <li class="list-group-item">No posts found.</li>
+        {% endif %}
+    </ul>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/myanswer.js') }}"></script>
+{% endblock %}

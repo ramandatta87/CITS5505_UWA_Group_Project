@@ -3,8 +3,8 @@ from flask_mail import Message
 from app import mail, db
 import datetime
 from flask_login import current_user, login_required
-from app.forms import PostForm, FilterSortForm, ReplyForm
-from app.models.model import Posts, Tag, User, Reply,FavoritePost
+from app.forms import PostForm, FilterSortForm, ReplyForm, FilterSortForm
+from app.models.model import Posts, Tag, User, Reply, FavoritePost
 
 # Define a Blueprint named 'main' for organizing routes and views
 main = Blueprint('main', __name__)
@@ -355,3 +355,52 @@ def my_favorites():
 def about():
     
     return render_template('main/about.html')
+
+# Route to display My Answered Post
+@main.route('/my_answers')
+@login_required
+def my_answers():
+    form = FilterSortForm()
+    posts_with_my_replies = (
+        db.session.query(Posts)
+        .join(Reply, Posts.id == Reply.post_id)
+        .filter(Reply.author_id == current_user.id)
+        .all()
+    )
+    return render_template('main/my_answers.html', posts=posts_with_my_replies, form=form)
+
+# API Endpoint for My Answers
+@main.route('/api/my_answers_posts', methods=['GET'])
+@login_required
+def api_my_answers_posts():
+    order = request.args.get('order', 'asc')
+
+    query = (
+        db.session.query(Posts)
+        .join(Reply, Posts.id == Reply.post_id)
+        .filter(Reply.author_id == current_user.id)
+    )
+
+    if order == 'desc':
+        query = query.order_by(Posts.date_posted.desc())
+    else:
+        query = query.order_by(Posts.date_posted.asc())
+
+    posts = query.all()
+
+    posts_data = []
+    for post in posts:
+        post_data = {
+            'id': post.id,
+            'title': post.title,
+            'content': post.content,
+            'author_first_name': post.author.first_name,
+            'author_last_name': post.author.last_name,
+            'tag': post.tag.tag,
+            'date_posted': post.date_posted.strftime('%B %d, %Y'),
+            'answered': post.answered,
+            'career_preparation': post.career_preparation
+        }
+        posts_data.append(post_data)
+
+    return jsonify(posts_data)
