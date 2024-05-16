@@ -47,11 +47,14 @@ def add_post():
             db.session.add(tag)
             db.session.commit()
 
+        # Map the radio button value to 0 or 1 for career_preparation
+        career_preparation_value = 1 if form.question_type.data == 'career' else 0
+
         post = Posts(
             title=form.title.data,
             content=form.content.data,
             tag_id=tag.id,
-            career_preparation=form.career_preparation.data,
+            career_preparation=career_preparation_value,  # Use the mapped value
             author_id=current_user.id,
             deleted=False,
             answered=False
@@ -60,9 +63,12 @@ def add_post():
         db.session.commit()
 
         flash("Blog Post Submitted Successfully")
-        return redirect(url_for('main.add_post'))
+        return redirect(url_for('main.view_post', post_id=post.id))  # Redirect to the newly created post
 
     return render_template("/main/add_post.html", form=form)
+
+
+
 
 @main.route('/autocomplete', methods=['GET'])
 def autocomplete():

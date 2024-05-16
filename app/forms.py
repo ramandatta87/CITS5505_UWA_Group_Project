@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, BooleanField, SubmitField, SelectField,PasswordField
+from wtforms import StringField, TextAreaField, BooleanField, SubmitField, SelectField, PasswordField, RadioField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 from flask_ckeditor import CKEditor,CKEditorField
 
@@ -59,11 +59,9 @@ class EditProfileForm(FlaskForm):
 class PostForm(FlaskForm):
     title = StringField("Title", validators=[DataRequired()])
     content = CKEditorField('Content', validators=[DataRequired()])
-    # StringField for entering a tag
     tag = StringField('Tag', validators=[DataRequired()])
-    # Boolean field for indicating if the post is related to career preparation
-    career_preparation = BooleanField('Career Preparation')
-    submit = SubmitField("Submit") 
+    question_type = RadioField('Question Type', choices=[('unit', 'Unit Question'), ('career', 'Career Preparation')], default='unit')
+    submit = SubmitField("Submit")
 
 
 # Form for Filter 

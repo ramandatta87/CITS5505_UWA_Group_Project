@@ -28,10 +28,15 @@
             {{ form.tag(class="form-control", id="autocomplete") }}
         </div>
 
-        <!-- Career Preparation Field -->
-        <div class="mb-3 form-check">
-            {{ form.career_preparation(class="form-check-input", id="career_preparation") }}
-            <label class="form-check-label" for="career_preparation">Career Preparation Question</label>
+        <!-- Question Type Field -->
+        <div class="mb-3">
+            {{ form.question_type.label(class="form-label") }}
+            {% for subfield in form.question_type %}
+                <div class="form-check">
+                    {{ subfield(class="form-check-input") }}
+                    <label class="form-check-label" for="{{ subfield.id }}">{{ subfield.label.text }}</label>
+                </div>
+            {% endfor %}
         </div>
 
         <!-- Content Field -->
@@ -58,6 +63,5 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <!-- Include the autocomplete script -->
 <script src="{{ url_for('static', filename='js/autocomplete.js') }}"></script>
-
 
 {% endblock %}
