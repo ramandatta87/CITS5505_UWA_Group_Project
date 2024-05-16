@@ -1,5 +1,4 @@
 <header>
-    <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary p-0" style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
         <div class="container-fluid">
             <a class="navbar-brand" href="{{ url_for('main.index') }}">DevConnect</a>
@@ -17,7 +16,6 @@
                 </ul>
                 <!-- Search form -->
                 <form class="d-flex ms-auto" method="GET" action="{{ url_for('main.search') }}">
-                    <!-- Retain search query in the input field after performing a search -->
                     <input class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search" value="{{ request.args.get('q', '') }}">
                     <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
@@ -31,6 +29,7 @@
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
                                 <li><a class="dropdown-item" href="{{ url_for('auth.profile') }}">Profile</a></li>
                                 <li><a class="dropdown-item" href="{{ url_for('auth.change_password') }}">Change Password</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('main.my_favorites') }}">My Favorites</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a></li>
                             </ul>

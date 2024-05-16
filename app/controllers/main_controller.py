@@ -4,7 +4,7 @@ from app import mail, db
 import datetime
 from flask_login import current_user, login_required
 from app.forms import PostForm, FilterSortForm, ReplyForm
-from app.models.model import Posts, Tag, User, Reply
+from app.models.model import Posts, Tag, User, Reply,FavoritePost
 
 # Define a Blueprint named 'main' for organizing routes and views
 main = Blueprint('main', __name__)
@@ -319,3 +319,33 @@ def search():
 
     form = FilterSortForm()
     return render_template('main/posts.html', form=form, posts=search_results, search_query=query)
+
+
+# Route to mark/unmark a post as favorite
+@main.route('/favorite_post/<int:post_id>', methods=['POST'])
+@login_required
+def favorite_post(post_id):
+    post = Posts.query.get_or_404(post_id)
+    favorite = FavoritePost.query.filter_by(user_id=current_user.id, post_id=post_id).first()
+
+    if favorite:
+        # If the post is already a favorite, remove it
+        db.session.delete(favorite)
+        db.session.commit()
+        flash('Post removed from favorites', 'info')
+    else:
+        # Add post to favorites
+        new_favorite = FavoritePost(user_id=current_user.id, post_id=post_id)
+        db.session.add(new_favorite)
+        db.session.commit()
+        flash('Post added to favorites', 'success')
+
+    return redirect(url_for('main.view_post', post_id=post_id))
+
+# Route to display the logged-in user's favorite posts
+@main.route('/my_favorites')
+@login_required
+def my_favorites():
+    favorite_posts = FavoritePost.query.filter_by(user_id=current_user.id).all()
+    posts = [favorite.post for favorite in favorite_posts]
+    return render_template('main/my_favorites.html', posts=posts)
