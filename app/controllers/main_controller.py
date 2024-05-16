@@ -442,3 +442,9 @@ def add_tags_to_sidebar():
         g.tags = tags_with_counts
     else:
         g.tags = []
+
+@main.route("/career")
+@login_required
+def career():
+    career_posts = Posts.query.filter_by(career_preparation=True).all()
+    return render_template("main/career.html", posts=career_posts)
