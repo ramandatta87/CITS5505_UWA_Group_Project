@@ -10,17 +10,15 @@
 </div>
 {% endfor %}
 
-<h1>Posts{% if search_query %} - Search Results for "{{ search_query }}"{% endif %}</h1>
+<h1>Posts{% if search_query %} - {{ search_query }}{% endif %}</h1>
 <br/>
 <div class="shadow p-3 mb-5 bg-body rounded">
     <!-- Sort Form -->
-    <form id="filter-sort-form" class="mb-4">
+    <form id="filter-sort-form" method="POST" action="{{ url_for('main.posts') }}" class="mb-4">
+        {{ form.hidden_tag() }}
         <div class="mb-3">
-            <label for="order" class="form-label">Order By</label>
-            <select id="order" class="form-control">
-                <option value="asc">Newest</option>
-                <option value="desc">Oldest</option>
-            </select>
+            {{ form.order.label(class="form-label") }}
+            {{ form.order(class="form-control", id="order") }}
         </div>
     </form>
     
@@ -31,10 +29,6 @@
             <h5><a href="{{ url_for('main.view_post', post_id=post.id, origin='posts') }}">{{ post.title }}</a></h5>
             <p>by {{ post.author.first_name }} {{ post.author.last_name }} on {{ post.date_posted.strftime('%B %d, %Y') }}</p>
             <p>Tag: {{ post.tag.tag if post.tag else 'N/A' }}</p>
-            <p>{{ post.career_preparation == 0 and 'Unit' or 'Career Preparation' }}</p>
-            {% if post.answered %}
-            <p>Answered</p>
-            {% endif %}
             <p>{{ post.content|safe }}</p>
         </li>
         {% endfor %}

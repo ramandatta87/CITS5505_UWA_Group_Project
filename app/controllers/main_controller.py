@@ -1,10 +1,11 @@
-from flask import Blueprint, render_template, session, flash, redirect, url_for, request, Response, jsonify,json
+from flask import Blueprint, render_template, session, flash, redirect, url_for, request, Response, jsonify,json,g 
 from flask_mail import Message
 from app import mail, db
 import datetime
 from flask_login import current_user, login_required
 from app.forms import PostForm, FilterSortForm, ReplyForm, FilterSortForm
 from app.models.model import Posts, Tag, User, Reply, FavoritePost
+from sqlalchemy import func
 
 # Define a Blueprint named 'main' for organizing routes and views
 main = Blueprint('main', __name__)
@@ -410,3 +411,34 @@ def api_my_answers_posts():
         posts_data.append(post_data)
 
     return jsonify(posts_data)
+
+# Route for Tag
+@main.route("/tags")
+@login_required
+def tags():
+    tags_with_counts = db.session.query(
+        Tag.id,
+        Tag.tag,
+        func.count(Posts.id).label('post_count')
+    ).join(Posts, Posts.tag_id == Tag.id).group_by(Tag.id).all()
+
+    return render_template("main/tags.html", tags=tags_with_counts)
+
+@main.route("/tag/<int:tag_id>")
+@login_required
+def posts_by_tag(tag_id):
+    tag = Tag.query.get_or_404(tag_id)
+    posts = Posts.query.filter_by(tag_id=tag_id).all()
+    return render_template("main/posts_by_tag.html", tag=tag, posts=posts)
+
+@main.before_app_request
+def add_tags_to_sidebar():
+    if current_user.is_authenticated:
+        tags_with_counts = db.session.query(
+            Tag.id,
+            Tag.tag,
+            func.count(Posts.id).label('post_count')
+        ).join(Posts, Posts.tag_id == Tag.id).group_by(Tag.id).all()
+        g.tags = tags_with_counts
+    else:
+        g.tags = []
