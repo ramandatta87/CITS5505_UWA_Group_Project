@@ -13,8 +13,14 @@ main = Blueprint('main', __name__)
 @main.route("/index")
 @main.route("/home")
 def index():
-    login_status = session.get('logged_in', False)
-    return render_template("index.html", login=login_status)
+    # Check if the user is logged in
+    if current_user.is_authenticated:
+        # If logged in, redirect to the posts page
+        return redirect(url_for('main.posts'))
+    else:
+        # If not logged in, render the index page
+        login_status = session.get('logged_in', False)
+        return render_template("index.html", login=login_status)
 
 
 @main.route("/mailcheck")
