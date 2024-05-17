@@ -45,9 +45,11 @@
             {{ form.content(class="form-control", id="content", rows="5") }}
         </div>
 
-        <!-- Submit Button -->
+        <!-- Submit, Draft, and Cancel Buttons -->
         <div class="mb-3">
-            {{ form.submit(class="btn btn-secondary", id="submit") }}
+            {{ form.submit(class="btn btn-primary", id="submit") }}
+            {{ form.draft(class="btn btn-secondary", id="draft") }}
+            <a href="{{ url_for('main.posts') }}" class="btn btn-danger">Cancel</a>
         </div>
     </form>
     {{ ckeditor.load() }}
@@ -63,5 +65,4 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <!-- Include the autocomplete script -->
 <script src="{{ url_for('static', filename='js/autocomplete.js') }}"></script>
-
 {% endblock %}
