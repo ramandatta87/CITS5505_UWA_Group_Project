@@ -50,6 +50,9 @@ def add_post():
         # Map the radio button value to 0 or 1 for career_preparation
         career_preparation_value = 1 if form.question_type.data == 'career' else 0
 
+        # Determine if the post is a draft
+        is_draft = form.draft.data
+
         post = Posts(
             title=form.title.data,
             content=form.content.data,
@@ -57,17 +60,20 @@ def add_post():
             career_preparation=career_preparation_value,  # Use the mapped value
             author_id=current_user.id,
             deleted=False,
-            answered=False
+            answered=False,
+            is_draft=is_draft  # Set the draft status
         )
         db.session.add(post)
         db.session.commit()
 
-        flash("Blog Post Submitted Successfully")
-        return redirect(url_for('main.view_post', post_id=post.id))  # Redirect to the newly created post
+        if is_draft:
+            flash("Blog Post Saved as Draft")
+            return redirect(url_for('main.add_post'))
+        else:
+            flash("Blog Post Submitted Successfully")
+            return redirect(url_for('main.view_post', post_id=post.id))  # Redirect to the newly created post
 
     return render_template("/main/add_post.html", form=form)
-
-
 
 
 @main.route('/autocomplete', methods=['GET'])

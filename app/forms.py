@@ -62,6 +62,8 @@ class PostForm(FlaskForm):
     tag = StringField('Tag', validators=[DataRequired()])
     question_type = RadioField('Question Type', choices=[('unit', 'Unit Question'), ('career', 'Career Preparation')], default='unit')
     submit = SubmitField("Submit")
+    draft = SubmitField("Save as Draft")
+
 
 
 # Form for Filter 

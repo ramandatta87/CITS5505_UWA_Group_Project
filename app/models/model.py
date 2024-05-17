@@ -54,13 +54,14 @@ class Posts(db.Model):
     answered = db.Column(db.Boolean, default=False)
     tag_id = db.Column(db.Integer, db.ForeignKey('tags.id'))
     career_preparation = db.Column(db.Boolean, default=False)
+    is_draft = db.Column(db.Boolean, default=False)  # New column to indicate if the post is a draft
 
     author = db.relationship('User', backref=db.backref('posts', lazy=True))
     tag = db.relationship('Tag', backref=db.backref('posts', lazy=True))
     
-    
     def __repr__(self):
         return f'<Posts {self.title}>'
+
     
 # Reply Model
 class Reply(db.Model):
