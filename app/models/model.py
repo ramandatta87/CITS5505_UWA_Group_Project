@@ -81,7 +81,7 @@ class Reply(db.Model):
     def __repr__(self):
         return f'<Reply {self.id}>'
     
-# Favourite Post Model
+# Favourite Post Model for user
 
 class FavoritePost(db.Model):
     __tablename__ = "favorite_posts"
