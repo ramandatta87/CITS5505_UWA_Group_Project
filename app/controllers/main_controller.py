@@ -223,7 +223,7 @@ def edit_post(post_id):
             db.session.add(tag)
             db.session.commit()
         post.tag_id = tag.id
-        post.career_preparation = form.career_preparation.data
+        # Note: career_preparation is not updated during edit
         db.session.commit()
         flash('Your post has been updated!', 'success')
         return redirect(url_for('main.view_post', post_id=post.id))
@@ -232,7 +232,7 @@ def edit_post(post_id):
         form.title.data = post.title
         form.content.data = post.content
         form.tag.data = post.tag.tag if post.tag else ''
-        form.career_preparation.data = post.career_preparation
+        # No need to set form.career_preparation.data here
 
     return render_template('main/edit_post.html', title='Edit Post', form=form, post=post)
 

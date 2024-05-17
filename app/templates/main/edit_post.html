@@ -13,7 +13,7 @@
 <h1>Edit Post</h1>
 <br/>
 <div class="shadow p-3 mb-5 bg-body rounded">
-    <form method="POST" action="{{ url_for('main.edit_post', post_id=post.id) }}">
+    <form method="POST">
         {{ form.hidden_tag() }}
 
         <!-- Title Field -->
@@ -25,13 +25,7 @@
         <!-- Tag Field -->
         <div class="mb-3">
             {{ form.tag.label(class="form-label", for="tag") }}
-            {{ form.tag(class="form-control", id="tag") }}
-        </div>
-
-        <!-- Career Preparation Field -->
-        <div class="mb-3 form-check">
-            {{ form.career_preparation(class="form-check-input", id="career_preparation") }}
-            <label class="form-check-label" for="career_preparation">Career Preparation Question</label>
+            {{ form.tag(class="form-control", id="autocomplete") }}
         </div>
 
         <!-- Content Field -->
@@ -40,10 +34,10 @@
             {{ form.content(class="form-control", id="content", rows="5") }}
         </div>
 
-        <!-- Submit Button -->
+        <!-- Submit and Cancel Buttons -->
         <div class="mb-3">
-            {{ form.submit(class="btn btn-primary", id="submit") }}
-            <a href="{{ url_for('main.view_post', post_id=post.id) }}" class="btn btn-secondary">Cancel</a>
+            {{ form.submit(class="btn btn-secondary", id="submit") }}
+            <a href="{{ url_for('main.view_post', post_id=post.id) }}" class="btn btn-danger">Cancel</a>
         </div>
     </form>
     {{ ckeditor.load() }}
