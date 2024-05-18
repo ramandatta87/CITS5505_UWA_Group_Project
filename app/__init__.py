@@ -1,3 +1,4 @@
+
 from flask import Flask
 from flask_login import LoginManager  # Import LoginManager
 from flask_mail import Mail  # Importing flask_email module
@@ -41,9 +42,7 @@ def create_app(config_class=Config):
     def load_user(user_id):
         from app.models.model import User  # Import inside to avoid circular import issues
         
-        print("Loading user:", user_id)
         user = User.query.get(int(user_id))
-        print("Loaded user:", user)
         return user
 
     # Import and register blueprints for different parts of the application
