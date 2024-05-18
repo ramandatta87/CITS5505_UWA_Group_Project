@@ -6,10 +6,12 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from .config import Config
 from flask_ckeditor import CKEditor,CKEditorField
+from flask_session import Session
 
 
 # Initialize SQLAlchemy and migration engine
 db = SQLAlchemy()
+session = Session()  # Initialize Flask-Session
 migrate = Migrate()
 mail = Mail()
 login_manager = LoginManager()  # Initialize LoginManager
@@ -42,8 +44,8 @@ def create_app(config_class=Config):
     def load_user(user_id):
         from app.models.model import User  # Import inside to avoid circular import issues
         
-        user = User.query.get(int(user_id))
-        return user
+        
+        return User.query.get(int(user_id))
 
     # Import and register blueprints for different parts of the application
     from app.controllers.auth_controller import auth

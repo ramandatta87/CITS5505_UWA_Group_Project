@@ -24,7 +24,7 @@
     </div>
 
     <!-- Links visible only to authenticated users -->
-    {% if current_user.is_authenticated %}
+    {% if session.logged_in %}
         <div class="card">
             <div class="card-header">
                 <h5>My Content</h5>
@@ -41,6 +41,14 @@
                 </a>
                 <a href="{{ url_for('main.drafts') }}" class="list-group-item list-group-item-action">
                     <i class="fa fa-pencil"></i> My Draft Posts
+                </a>
+            </div>
+            <div>
+                <a href="{{ url_for('auth.profile') }}" class="list-group-item list-group-item-action">
+                    <i class="fa fa-pencil"></i> Profile
+                </a>
+                <a href="{{ url_for('auth.logout') }}" class="list-group-item list-group-item-action">
+                    <i class="fa fa-pencil"></i> Logout
                 </a>
             </div>
         </div>
