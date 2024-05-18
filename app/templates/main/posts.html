@@ -25,36 +25,11 @@
         <!-- Main Content -->
         <div class="col-md-9">
             <!-- post_header.html -->
-
-            <section class="slider_section ">
-                <div class="container ">
-                <div class="row">
-                    <div class="col-md-6 ">
-                    <div class="detail-box">
-                        <h1>
-                        Get Connected Now<br>
-                        and Start Thriving!<br>
-                        </h1>
-                        <p>
-                        CSSE DevConnect is an open community for all students who take units under CSSE Department. 
-                        Our mission is to
-                        Help you to thrive in the academic and get you prepared for the workforce.                        </p>
-                    </div>
-                    </div>
-                    <div class="col-md-6">
-                    <div class="img-box">
-                        <img src="{{ url_for('static', filename='images/dev-connect-logo.jpeg') }}" alt="">
-                    </div>
-                    </div>
-                </div>
-                </div>
-            </section>
-
-
+            <div class="welcome" style="background-image: linear-gradient(to right, blue, lightgreen); padding: 10px; color: white; text-align: center;">
+                <p> Welcome and Enjoy Your Journey!</p>
+            </div>
             <div class="row mb-4">
-                <div class="col-md-8">
-                    <h1>{{ heading }}</h1>
-                </div>
+                <h1>{{ heading }}</h1>
             </div>
 
             <ul class="list-group" id="posts-list">
