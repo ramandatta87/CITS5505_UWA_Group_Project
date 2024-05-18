@@ -3,13 +3,14 @@ from flask_mail import Message
 from app import mail, db
 import datetime
 from flask_login import current_user, login_required
-from app.forms import PostForm, FilterSortForm, ReplyForm
-from app.models.model import Posts, Tag, User, Reply, FavoritePost
+from app.View.forms import PostForm, FilterSortForm, ReplyForm
+from app.model.models import Posts, Tag, User, Reply, FavoritePost
 from sqlalchemy import func
 
 # Define a Blueprint named 'main' for organizing routes and views
 main = Blueprint('main', __name__)
 
+# Index route
 @main.route("/")
 @main.route("/index")
 @main.route("/home")
@@ -24,6 +25,7 @@ def index():
         login_status = session.get('logged_in', False)
         return render_template("index.html", login=login_status)
 
+# Mail check route
 @main.route("/mailcheck")
 def mailcheck():
     """
@@ -41,6 +43,7 @@ def mail_check():
     msg.body = f"This is a test email sent from Flask using Gmail. Mail Generated Time : {ct}"
     mail.send(msg)
 
+# Route to add a new post
 @main.route("/add_post", methods=['GET', 'POST'])
 @login_required
 def add_post():
@@ -81,6 +84,7 @@ def add_post():
 
     return render_template("/main/add_post.html", form=form)
 
+# API endpoint for tag autocomplete
 @main.route('/autocomplete', methods=['GET'])
 def autocomplete():
     """
@@ -91,6 +95,7 @@ def autocomplete():
     results = [result[0] for result in results]
     return Response(json.dumps(results), mimetype='application/json')
 
+# API endpoint to fetch posts based on filters and sorting
 @main.route('/api/posts')
 def api_posts():
     """
@@ -117,6 +122,7 @@ def api_posts():
         posts_data.append(post_data)
     return jsonify(posts_data=posts_data, has_next=pagination.has_next)
 
+# API endpoint for post autocomplete
 @main.route('/api/autocomplete_posts', methods=['GET'])
 def autocomplete_posts():
     """
@@ -142,6 +148,7 @@ def autocomplete_posts():
 
     return jsonify(suggestions)
 
+# Route to display the user's posts
 @main.route('/my_posts')
 @login_required
 def my_posts():
@@ -161,6 +168,7 @@ def my_posts():
     
     return render_template("main/my_posts.html", posts=my_posts, pagination=pagination, heading=heading, origin='my_posts')
 
+# Route to view a specific post
 @main.route('/post/<int:post_id>', methods=['GET', 'POST'])
 @login_required
 def view_post(post_id):
@@ -189,6 +197,7 @@ def view_post(post_id):
 
     return render_template('main/view_post.html', post=post, author=author, replies=replies, form=form, origin=origin)
 
+# API endpoint to toggle the acceptance of an answer
 @main.route('/post/toggle_answer/<int:reply_id>', methods=['POST'])
 @login_required
 def toggle_answer(reply_id):
@@ -210,6 +219,7 @@ def toggle_answer(reply_id):
     db.session.commit()
     return jsonify({'success': True})
 
+# API endpoint to edit a reply
 @main.route('/post/edit_reply/<int:reply_id>', methods=['POST'])
 @login_required
 def edit_reply(reply_id):
@@ -226,6 +236,7 @@ def edit_reply(reply_id):
     db.session.commit()
     return jsonify({'success': True})
 
+# Route to edit a specific post
 @main.route('/post/<int:post_id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_post(post_id):
@@ -261,6 +272,7 @@ def edit_post(post_id):
 
     return render_template('main/edit_post.html', title='Edit Post', form=form, post=post)
 
+# Route to display all posts
 @main.route("/posts", methods=["GET", "POST"])
 def posts():
     """
@@ -279,6 +291,7 @@ def posts():
     
     return render_template("main/posts.html", posts=all_posts, pagination=pagination, heading=heading, origin='posts')
 
+# Route to search for posts by title, content, or tags
 @main.route("/search", methods=["GET"])
 def search():
     """
@@ -316,6 +329,7 @@ def search():
     form = FilterSortForm()
     return render_template('main/posts.html', form=form, posts=search_results, search_query=query, pagination=pagination)
 
+# Route to mark or unmark a post as favorite
 @main.route('/favorite_post/<int:post_id>', methods=['POST'])
 @login_required
 def favorite_post(post_id):
@@ -337,6 +351,7 @@ def favorite_post(post_id):
 
     return redirect(url_for('main.view_post', post_id=post_id, origin='posts'))
 
+# Route to display the user's favorite posts
 @main.route('/my_favorites')
 @login_required
 def my_favorites():
@@ -359,6 +374,7 @@ def my_favorites():
     
     return render_template("main/my_favorites.html", posts=favorite_posts, pagination=pagination, heading=heading, origin='my_favorites')
 
+# Route to remove a post from favorites
 @main.route('/remove_favorite/<int:post_id>', methods=['POST'])
 @login_required
 def remove_favorite(post_id):
@@ -373,6 +389,7 @@ def remove_favorite(post_id):
 
     return redirect(url_for('main.my_favorites'))
 
+# Route to display the About page
 @main.route('/about')
 def about():
     """
@@ -380,6 +397,7 @@ def about():
     """
     return render_template('main/about.html')
 
+# Route to display posts answered by the user
 @main.route('/my_answers')
 @login_required
 def my_answers():
@@ -402,6 +420,7 @@ def my_answers():
     
     return render_template('main/my_answers.html', posts=posts_with_my_replies, pagination=pagination, heading=heading, origin='my_answers')
 
+# Route to view a specific post that was answered by the user
 @main.route('/post/<int:post_id>/view_reply', methods=['GET', 'POST'])
 @login_required
 def view_reply(post_id):
@@ -430,6 +449,7 @@ def view_reply(post_id):
 
     return render_template('main/view_post.html', post=post, author=author, replies=replies, form=form, origin=origin)
 
+# API endpoint to fetch posts answered by the user
 @main.route('/api/my_answers_posts', methods=['GET'])
 @login_required
 def api_my_answers_posts():
@@ -468,6 +488,7 @@ def api_my_answers_posts():
 
     return jsonify(posts_data)
 
+# Route to display tags with post counts
 @main.route("/tags")
 @login_required
 def tags():
@@ -482,6 +503,7 @@ def tags():
 
     return render_template("main/tags.html", tags=tags_with_counts)
 
+# Route to display posts by a specific tag
 @main.route("/tag/<int:tag_id>")
 @login_required
 def posts_by_tag(tag_id):
@@ -497,6 +519,7 @@ def posts_by_tag(tag_id):
     
     return render_template("main/posts_by_tag.html", tag=tag, posts=posts, pagination=pagination)
 
+# Before request handler to add tags to the sidebar
 @main.before_app_request
 def add_tags_to_sidebar():
     """
@@ -512,6 +535,7 @@ def add_tags_to_sidebar():
     else:
         g.tags = []
 
+# Route to display career preparation posts
 @main.route("/career")
 @login_required
 def career():
@@ -531,6 +555,7 @@ def career():
     
     return render_template("main/posts.html", posts=career_posts, pagination=pagination, heading=heading, origin='career')
 
+# Route to display unit preparation posts
 @main.route("/uni_preparation", methods=["GET"])
 @login_required
 def uni_preparation():
@@ -550,6 +575,7 @@ def uni_preparation():
     
     return render_template("main/posts.html", posts=uni_preparation_posts, pagination=pagination, heading=heading, origin='uni_preparation')
 
+# Route to display draft posts
 @main.route('/drafts')
 @login_required
 def drafts():
@@ -569,6 +595,7 @@ def drafts():
     
     return render_template('main/drafts.html', posts=user_drafts, pagination=pagination, heading=heading, origin='drafts')
 
+# Route to view a specific draft post
 @main.route('/post/<int:post_id>/view_draft', methods=['GET', 'POST'])
 @login_required
 def view_draft(post_id):
@@ -597,7 +624,7 @@ def view_draft(post_id):
 
     return render_template('main/view_post.html', post=post, author=author, replies=replies, form=form, origin=origin)
 
-
+# Route to edit a draft post
 @main.route('/post/<int:post_id>/edit_draft', methods=['GET', 'POST'])
 @login_required
 def edit_draft(post_id):
@@ -635,6 +662,7 @@ def edit_draft(post_id):
 
     return render_template('main/edit_draft.html', title='Edit Draft', form=form, post=post, origin=origin)
 
+# Route to release a draft post (make it no longer a draft)
 @main.route('/post/<int:post_id>/release_draft', methods=['POST'])
 @login_required
 def release_draft(post_id):
@@ -652,6 +680,7 @@ def release_draft(post_id):
     flash('Draft post released successfully.', 'success')
     return redirect(url_for('main.drafts'))
 
+# Route to delete a draft post for the current user
 @main.route('/post/<int:post_id>/delete_draft', methods=['POST'])
 @login_required
 def delete_draft(post_id):
@@ -667,3 +696,11 @@ def delete_draft(post_id):
     db.session.commit()
     flash('Draft post deleted successfully.', 'success')
     return redirect(url_for('main.drafts'))
+
+# Error Handler for 404
+@main.errorhandler(404)
+def page_not_found(e):
+    """
+    Error Handler for 404
+    """
+    return render_template('404.html'), 404

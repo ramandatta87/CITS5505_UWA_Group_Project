@@ -32,6 +32,6 @@ class Config(object):
 
 class TestingConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'test.db')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'  # Use in-memory database for testing
     WTF_CSRF_ENABLED = False
     SESSION_COOKIE_SECURE = False  # Turned off for testing

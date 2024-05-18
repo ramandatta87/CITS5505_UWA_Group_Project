@@ -1,12 +1,18 @@
-from app import  db
-from app.models.model import Posts
+from app import db
+from app.model.models import Posts
 
 def test_register_page(test_client):
+    """
+    Test the registration page.
+    """
     response = test_client.get('/auth/register')
     assert response.status_code == 200
     assert b"Register" in response.data
 
 def test_register_user(test_client, init_database):
+    """
+    Test user registration.
+    """
     response = test_client.post('/auth/register',
                                 data=dict(
                                     first_name='New',
@@ -22,11 +28,17 @@ def test_register_user(test_client, init_database):
     assert b"Registration successful! You can now login." in response.data
 
 def test_login_page(test_client):
+    """
+    Test the login page.
+    """
     response = test_client.get('/auth/login')
     assert response.status_code == 200
     assert b"Login" in response.data
 
 def test_login_user(test_client, init_database):
+    """
+    Test user login.
+    """
     response = test_client.post('/auth/login',
                                 data=dict(email='testuser@example.com', password='password'),
                                 follow_redirects=True)
@@ -34,6 +46,9 @@ def test_login_user(test_client, init_database):
     assert b"Logout" in response.data
 
 def test_logout_user(test_client):
+    """
+    Test user logout.
+    """
     test_client.post('/auth/login',
                      data=dict(email='testuser@example.com', password='password'),
                      follow_redirects=True)
@@ -42,6 +57,9 @@ def test_logout_user(test_client):
     assert b"Login" in response.data
 
 def test_profile_update(test_client, init_database, login_default_user):
+    """
+    Test profile update.
+    """
     response = test_client.post('/auth/profile', data=dict(
         first_name='Updated',
         last_name='User',
@@ -51,6 +69,9 @@ def test_profile_update(test_client, init_database, login_default_user):
     assert b'Your profile has been updated.' in response.data
 
 def test_add_post(test_client, init_database, login_default_user):
+    """
+    Test adding a new post.
+    """
     response = test_client.post('/add_post', data=dict(
         title='Test Post',
         content='This is a test post.',
@@ -62,6 +83,9 @@ def test_add_post(test_client, init_database, login_default_user):
     assert b'Blog Post Submitted Successfully' in response.data
 
 def test_favorite_post(test_client, init_database, login_default_user):
+    """
+    Test marking a post as favorite.
+    """
     post = Posts(title='Favorite Test Post', content='This is a favorite test post.', tag_id=1, career_preparation=False, author_id=1, deleted=False, answered=False, is_draft=False)
     db.session.add(post)
     db.session.commit()
@@ -74,8 +98,10 @@ def test_favorite_post(test_client, init_database, login_default_user):
     assert response.status_code == 200
     assert b'Favorite Test Post' in response.data
 
-
 def test_view_post(test_client, init_database, login_default_user):
+    """
+    Test viewing a specific post.
+    """
     post = Posts(title='Test Post', content='This is a test post.', tag_id=1, career_preparation=False, author_id=1, deleted=False, answered=False, is_draft=False)
     db.session.add(post)
     db.session.commit()
@@ -86,6 +112,9 @@ def test_view_post(test_client, init_database, login_default_user):
     assert b'This is a test post.' in response.data
 
 def test_home_page(test_client):
+    """
+    Test the home page.
+    """
     response = test_client.get('/')
     assert response.status_code == 200
     assert b"Welcome" in response.data  # Adjust this according to your actual homepage content
