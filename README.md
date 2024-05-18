@@ -16,8 +16,8 @@ This web application is primarily designed as a learning Q&A and career preparat
 |------------|--------------|-----------------|
 | 23737198   | Jinsen Lou       | Jinsen_Lou |
 | 22917174   | Raman Datta      | ramandatta87 |
-| 23242469   | Qian Zhang       | zhangqianalone
-| 23364248   | Hari Kapoor      |  |
+| 23242469   | Qian Zhang       | zhangqianalone|
+| 23364248   | Hari Kapoor      |  
 
 ### 1. User Account Management
 Allow users to create accounts, log in, and log out, manage their profiles, and set preferences.
