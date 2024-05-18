@@ -25,3 +25,8 @@ class Config(object):
     MAIL_PASSWORD = 'urin uqte xesu euuh'  # Gmail password - Using Google App Generator
     MAIL_USE_SSL = False
     
+class TestingConfig(Config):
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'test.db')
+    WTF_CSRF_ENABLED = False
+    SESSION_COOKIE_SECURE = False  # Turned off for testing    
