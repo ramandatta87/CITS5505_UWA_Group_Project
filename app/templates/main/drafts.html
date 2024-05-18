@@ -1,5 +1,5 @@
 {% extends "includes/layout.html" %}
-{% block title %}Draft Posts{% endblock %}
+{% block title %}My Draft Posts{% endblock %}
 {% block content %}
 
 <!-- Display Flash Messages -->
@@ -10,29 +10,69 @@
 </div>
 {% endfor %}
 
-<h1>Draft Posts</h1>
-<br/>
-<div class="shadow p-3 mb-5 bg-body rounded">
-    <!-- Draft Posts List -->
-    <ul class="list-group" id="posts-list">
-        {% for post in posts %}
-        <li class="list-group-item">
-            <h5><a href="{{ url_for('main.edit_draft', post_id=post.id) }}">{{ post.title }}</a></h5>
-            <p>by {{ post.author.first_name }} {{ post.author.last_name }} on {{ post.date_posted.strftime('%B %d, %Y') }}</p>
-            <p>Tag: {{ post.tag.tag if post.tag else 'N/A' }}</p>
-            <p>{{ post.content|safe }}</p>
-            <form action="{{ url_for('main.release_draft', post_id=post.id) }}" method="POST" style="display: inline;">
-                <button type="submit" class="btn btn-success btn-sm">Release Draft</button>
-            </form>
-            <form action="{{ url_for('main.delete_draft', post_id=post.id) }}" method="POST" style="display: inline;">
-                <button type="submit" class="btn btn-danger btn-sm">Delete Draft</button>
-            </form>
-        </li>
-        {% endfor %}
-        {% if not posts %}
-        <li class="list-group-item">No draft posts found.</li>
-        {% endif %}
-    </ul>
+<div class="card p-3 mt-3">
+    <div class="row">
+        {% include "includes/sidebar.html" %}
+
+        <div class="col-md-9">
+            <h1>My Draft Posts</h1>
+            <!-- Posts List -->
+            <ul class="list-group" id="posts-list">
+                {% for post in posts %}
+                <li class="list-group-item">
+                    <h5>
+                        <a href="{{ url_for('main.view_draft', post_id=post.id, origin='drafts') }}">{{ post.title }}</a>
+                    </h5>
+                    <p>Tag: {{ post.tag.tag if post.tag else 'N/A' }}</p>
+                    <p>{{ post.content|safe }}</p>
+                    <p class="authorpost">by <span class="author_n">{{ post.author.first_name }} {{ post.author.last_name }}</span> on {{ post.date_posted.strftime('%B %d, %Y') }}</p>
+                </li>
+                {% endfor %}
+                {% if not posts %}
+                <li class="list-group-item">No posts found.</li>
+                {% endif %}
+            </ul>
+            
+            <!-- Pagination Controls -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if pagination.has_prev %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('main.drafts', page=pagination.prev_num) }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+                    {% for page_num in pagination.iter_pages() %}
+                    <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                        <a class="page-link" href="{{ url_for('main.drafts', page=page_num) }}">{{ page_num }}</a>
+                    </li>
+                    {% endfor %}
+                    
+                    {% if pagination.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('main.drafts', page=pagination.next_num) }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
 </div>
 
 {% endblock %}
