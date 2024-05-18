@@ -62,7 +62,7 @@ def login():
             login_user(user, remember=True)
             return redirect(url_for('main.index'))
         else:
-            flash('Login Unsuccessful. Please check email and password', 'danger')
+            flash('Login Unsuccessful', 'danger')
     return render_template('auth/login.html', form=form)
 
 # Route for user logout
@@ -85,7 +85,7 @@ def forget_password():
             user.password_hash = generate_password_hash(form.new_password.data)
             db.session.commit()
             # Send a confirmation email
-            send_password_change_email(user)
+            #send_password_change_email(user)
             flash('Your password has been updated. Please check your email for confirmation.', 'success')
             return redirect(url_for('auth.login'))
         else:

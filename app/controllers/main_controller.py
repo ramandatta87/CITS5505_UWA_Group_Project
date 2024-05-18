@@ -297,19 +297,24 @@ def search():
         keyword = keyword_part
 
     if tag:
-        search_results = Posts.query.filter(
+        base_query = Posts.query.filter(
             Posts.tag_id == tag.id,
             (Posts.title.ilike(f'%{keyword}%')) | 
             (Posts.content.ilike(f'%{keyword}%'))
-        ).all()
+        )
     else:
-        search_results = Posts.query.filter(
+        base_query = Posts.query.filter(
             (Posts.title.ilike(f'%{query}%')) | 
             (Posts.content.ilike(f'%{query}%'))
-        ).all()
+        )
+
+    # Implementing pagination
+    page = request.args.get('page', 1, type=int)
+    pagination = base_query.paginate(page=page, per_page=5)
+    search_results = pagination.items
 
     form = FilterSortForm()
-    return render_template('main/posts.html', form=form, posts=search_results, search_query=query)
+    return render_template('main/posts.html', form=form, posts=search_results, search_query=query, pagination=pagination)
 
 @main.route('/favorite_post/<int:post_id>', methods=['POST'])
 @login_required
