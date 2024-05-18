@@ -1,5 +1,5 @@
 {% extends "includes/layout.html" %}
-{% block title %}View Post{% endblock %}
+{% block title %}{{ post.title }}{% endblock %}
 {% block content %}
 
 <!-- Display Flash Messages -->
@@ -10,80 +10,55 @@
 </div>
 {% endfor %}
 
-<h1>{{ post.title }}</h1>
-<br/>
-<div class="shadow p-3 mb-5 bg-body rounded">
-    <p><strong>Author:</strong> {{ author.first_name }} {{ author.last_name }}</p>
-    <p><strong>Posted on:</strong> {{ post.date_posted.strftime('%B %d, %Y') }}</p>
-    <p><strong>Tag:</strong> {{ post.tag.tag }}</p>
-    <br/>
-    <p>{{ post.content | safe }}</p>
+<div class="card p-3 mt-3">
+    <div class="row">
+        {% include "includes/sidebar.html" %}
+        <div class="col-md-9">
+            <h1>{{ post.title }}</h1>
+            <p>{{ post.content|safe }}</p>
+            <p>Tag: {{ post.tag.tag if post.tag else 'N/A' }}</p>
+            <p>Author: {{ author.first_name }} {{ author.last_name }}</p>
+            <p>Posted on: {{ post.date_posted.strftime('%B %d, %Y') }}</p>
+            
+            <!-- Display existing replies -->
+            <h2>Replies</h2>
+            {% for reply in replies %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <p>{{ reply.answer }}</p>
+                    <p>Author: {{ reply.author.first_name }} {{ reply.author.last_name }}</p>
+                    <p>Posted on: {{ reply.timestamp.strftime('%B %d, %Y %H:%M') }}</p>
+                </div>
+            </div>
+            {% endfor %}
+
+            <!-- Reply form -->
+            <h2>Your Answer</h2>
+            <form method="post">
+                {{ form.hidden_tag() }}
+                <div class="mb-3">
+                    {{ form.answer.label(class="form-label") }}
+                    {{ form.answer(class="form-control") }}
+                </div>
+                <div class="mb-3 d-flex justify-content-between">
+                    {{ form.submit(class="btn btn-primary") }}
+                    {% if origin == 'tag' %}
+                    <a href="{{ url_for('main.posts_by_tag', tag_id=post.tag_id) }}" class="btn btn-secondary">Back to Tag Posts</a>
+                    {% elif origin == 'my_posts' %}
+                    <a href="{{ url_for('main.my_posts') }}" class="btn btn-secondary">Back to My Posts</a>
+                    {% elif origin == 'my_favorites' %}
+                    <a href="{{ url_for('main.my_favorites') }}" class="btn btn-secondary">Back to Favorite Posts</a>
+                    {% elif origin == 'my_answers' %}
+                    <a href="{{ url_for('main.my_answers') }}" class="btn btn-secondary">Back to My Answers</a>
+                    {% elif origin == 'drafts' %}
+                    <a href="{{ url_for('main.drafts') }}" class="btn btn-secondary">Back to My Draft Posts</a>
+                    {% else %}
+                    <a href="{{ url_for('main.posts') }}" class="btn btn-secondary">Back to All Posts</a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
-{% if post.author_id == current_user.id %}
-<a href="{{ url_for('main.edit_post', post_id=post.id) }}" class="btn btn-secondary post-buttons">Edit</a>
-{% endif %}
-
-{% if request.args.get('origin') == 'my_posts' %}
-<a href="{{ url_for('main.my_posts') }}" class="btn btn-secondary post-buttons">Back to My Posts</a>
-{% else %}
-<a href="{{ url_for('main.posts') }}" class="btn btn-secondary post-buttons">Back to All Posts</a>
-{% endif %}
-
-<h2>Replies</h2>
-<ul class="list-group" id="replies-list">
-    {% for reply in replies %}
-    <li class="list-group-item" id="reply-{{ reply.id }}">
-        <div class="reply-content">
-            <p>{{ reply.answer|safe }}</p>
-            <small>by {{ reply.author.first_name }} {{ reply.author.last_name }} on {{ reply.timestamp.strftime('%B %d, %Y') }}</small>
-        </div>
-        <div class="reply-edit-form mt-2" style="display: none;">
-            <textarea class="form-control edit-reply-textarea ckeditor" data-reply-id="{{ reply.id }}">{{ reply.answer }}</textarea>
-            <button type="button" class="btn btn-primary save-reply-button mt-2" data-reply-id="{{ reply.id }}">Save</button>
-            <button type="button" class="btn btn-secondary cancel-edit-reply-button mt-2" data-reply-id="{{ reply.id }}">Cancel</button>
-        </div>
-        <div class="mt-2 reply-buttons">
-            {% if reply.author_id == current_user.id and not reply.answered_accepted %}
-            <button class="btn btn-warning btn-sm edit-reply-button" data-reply-id="{{ reply.id }}">Edit</button>
-            {% endif %}
-            {% if post.author_id == current_user.id %}
-                {% if not reply.answered_accepted %}
-                <button class="btn btn-success btn-sm answer-toggle-button" data-reply-id="{{ reply.id }}" data-action="accept">Accept Answer</button>
-                {% else %}
-                <button class="btn btn-danger btn-sm answer-toggle-button" data-reply-id="{{ reply.id }}" data-action="reject">Reject Answer</button>
-                {% endif %}
-            {% endif %}
-        </div>
-    </li>
-    {% endfor %}
-</ul>
-
-<div id="reply-form" class="mt-4" style="display: none;">
-    <form method="POST" action="{{ url_for('main.view_post', post_id=post.id) }}">
-        {{ form.hidden_tag() }}
-        
-        <!-- Answer Field -->
-        <div class="mb-3">
-            {{ form.answer.label(class="form-label", for="answer") }}
-            {{ form.answer(class="form-control ckeditor", id="answer") }}
-        </div>
-
-        <!-- Submit and Cancel Buttons -->
-        <div class="mb-3">
-            {{ form.submit(class="btn btn-primary", id="submit") }}
-            <button type="button" id="cancel-reply" class="btn btn-secondary">Cancel</button>
-        </div>
-    </form>
-    {{ ckeditor.load() }}
-    {{ ckeditor.config(name='content') }}
-</div>
-
-<button id="reply-button" class="btn btn-primary post-buttons mt-4">Post Your Answer</button>
-
-{% endblock %}
-
-{% block scripts %}
-
-<script src="{{ url_for('static', filename='js/view_post.js') }}"></script>
 {% endblock %}

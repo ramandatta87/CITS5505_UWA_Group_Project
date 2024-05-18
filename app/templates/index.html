@@ -4,69 +4,413 @@
 
 {% block content %}
 <!-- Correct linking of CSS file using url_for -->
-<link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
 
-<section class="welcome mt-4">
-    <div class="row">
-        <div class="col-md-12 text-center">
-            <h1 class="display-4">Welcome to CSSE DevConnect.</h1>
-            {% if login %}
-                <h3>Let's get started.</h3>
-            {% else %}
-                <p class="lead">Already registered? <a href="{{ url_for('auth.login') }}">Login</a></p>
-            {% endif %}
+
+
+<!-- end header section -->
+    <!-- slider section -->
+    <section class="slider_section ">
+        <div class="container ">
+          <div class="row">
+            <div class="col-md-6 ">
+              <div class="detail-box">
+                <h1>
+                  Repair and <br>
+                  Maintenance <br>
+                  Services
+                </h1>
+                <p>
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui harum voluptatem adipisci. Quos molestiae saepe dicta nobis pariatur, tempora iusto, ad possimus soluta hic praesentium mollitia consequatur beatae, aspernatur culpa.
+                </p>
+                <a href="">
+                  Contact Us
+                </a>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="img-box">
+                <img src="{{ url_for('static', filename='images/images/slider-img.png') }}" alt="">
+              </div>
+            </div>
+          </div>
         </div>
+      </section>
+      <!-- end slider section -->
     </div>
-</section>
 
-<section class="questions mt-5">
+
+
+  <!-- end feature section -->
+
+  <!-- about section -->
+
+  <section class="about_section layout_padding-bottom">
     <div class="container">
-        <div class="questions-content">
-            <div class="questions-header text-center mb-4">
-                <h3 class="question-title">Quick search on <span>CSSE DevConnect</span></h3>
-            </div>
-            <div class="questions-body row text-center">
-                <div class="col-md-4">
-                    <div class="questions-body-item p-3">
-                        <img src="https://cdn.sstatic.net/Img/home/ask-a-question.svg?v=f4f2050b0297" alt="" class="question-item-icon mb-2" style="width: 50px; height: 50px;">
-                        <div class="question-item-text"><a href="{{ url_for('main.add_post') }}">Ask Question</a></div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="questions-body-item p-3">
-                        <img src="https://cdn.sstatic.net/Img/home/votes.svg?v=748a8f48a8e2" alt="" class="question-item-icon mb-2" style="width: 50px; height: 50px;">
-                        <div class="question-item-text">Vote on everything</div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="questions-body-item p-3">
-                        <img src="https://cdn.sstatic.net/Img/home/answer.svg?v=4cd8048a676c" alt="" class="question-item-icon mb-2" style="width: 50px; height: 50px;">
-                        <div class="question-item-text">Answer questions</div>
-                    </div>
-                </div>
-            </div>
-            <div class="questions-body-item-content text-center mt-4">
-                <img src="https://cdn.sstatic.net/Img/home/illo-feats-vote.svg?v=9d2eb0efdc17" alt="" class="question-item-content-img mb-3" style="width: 100px; height: 100px;">
-                <h4 class="question-item-content-text">
-                    Accept the answer which solved your problem to let others benefit from the valuable information.
-                </h4>
-                <a href="{{ url_for('auth.register') }}" class="btn btn-primary mt-3">Create an account</a>
-            </div>
+      <div class="row">
+        <div class="col-lg-5 col-md-6">
+          <div class="detail-box">
+            <h2>
+              About us
+            </h2>
+            <p>
+              There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomisedThere are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised
+            </p>
+            <a href="">
+              Read More
+            </a>
+          </div>
         </div>
-    </div>
-</section>
-
-<section class="hero mt-5">
-    <div class="hero-content text-center">
-        <h1 class="hero-title">We <span>CSSE</span> people who help</h1>
-        <p class="hero-paragraph">
-            We help you get answers to your toughest coding questions, share knowledge with your coworkers, and find your achievements here by joining our community.
-        </p>
-        <div class="hero-options mt-4">
-            <a href="#" class="btn btn-outline-primary me-2">Unit Questions</a>
-            <a href="#" class="btn btn-outline-secondary">Career preparation</a>
+        <div class="col-lg-7 col-md-6">
+          <div class="img-box">
+            <img src="{{ url_for('static', filename='images/images/about-img.jpg') }}" alt="">
+          </div>
         </div>
+      </div>
     </div>
-</section>
+  </section>
 
+  <!-- end about section -->
+
+
+  <!-- professional section -->
+
+  <section class="professional_section layout_padding">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="img-box">
+            <img src="{{ url_for('static', filename='images/professional-img.png') }}" alt="">
+          </div>
+        </div>
+        <div class="col-md-6 ">
+          <div class="detail-box">
+            <h2>
+              We Provide Professional <br>
+              Home Services.
+            </h2>
+            <p>
+              randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All randomised words which don't look even slightly
+            </p>
+            <a href="">
+              Read More
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- end professional section -->
+
+  <!-- service section -->
+
+  <section class="service_section layout_padding">
+    <div class="container ">
+      <div class="heading_container heading_center">
+        <h2> Our Services </h2>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 col-md-4 mx-auto">
+          <div class="box ">
+            <div class="img-box">
+              <img src="{{ url_for('static', filename='images/s1.png') }}" alt="" />
+            </div>
+            <div class="detail-box">
+              <h5>
+                Maintenance
+              </h5>
+              <p>
+                when looking at its layout. The point of using Lorem Ipsum is
+                that it has a more-or-less normal
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-4 mx-auto">
+          <div class="box ">
+            <div class="img-box">
+              <img src="{{ url_for('static', filename='images/s2.png') }}" alt="" />
+            </div>
+            <div class="detail-box">
+              <h5>
+                Electrical
+              </h5>
+              <p>
+                when looking at its layout. The point of using Lorem Ipsum is
+                that it has a more-or-less normal
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-4 mx-auto">
+          <div class="box ">
+            <div class="img-box">
+              <img src="{{ url_for('static', filename='images/s3.png') }}" alt="" />
+            </div>
+            <div class="detail-box">
+              <h5>
+                Plumbing
+              </h5>
+              <p>
+                when looking at its layout. The point of using Lorem Ipsum is
+                that it has a more-or-less normal
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="btn-box">
+        <a href="">
+          View More
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- end service section -->
+
+  <!-- client section -->
+
+  <section class="client_section ">
+    <div class="container">
+      <div class="heading_container heading_center">
+        <h2>
+          What Our Clients Say
+        </h2>
+      </div>
+      <div class="carousel-wrap layout_padding2-top ">
+        <div class="owl-carousel">
+          <div class="item">
+            <div class="box">
+              <div class="client_id">
+                <div class="img-box">
+                  <img src="{{ url_for('static', filename='images/client-1.png') }}" alt="">
+                </div>
+                <div class="client_detail">
+                  <div class="client_info">
+                    <h6>
+                      Jorch morik
+                    </h6>
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                  </div>
+                  <i class="fa fa-quote-left" aria-hidden="true"></i>
+                </div>
+              </div>
+              <div class="client_text">
+                <p>
+                  chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="box">
+              <d<img src="{{ url_for('static', filename='images/client-1.png') }}" alt="">
+                </div>
+                <div class="client_detail">
+                  <div class="client_info">
+                    <h6>
+                      Jorch morik
+                    </h6>
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                  </div>
+                  <i class="fa fa-quote-left" aria-hidden="true"></i>
+                </div>
+              </div>
+              <div class="client_text">
+                <p>
+                  chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="box">
+              <div class="client_id">
+                <div class="img-box">
+                 <img src="{{ url_for('static', filename='images/client-1.jpg') }}" alt="">
+                </div>
+                <div class="client_detail">
+                  <div class="client_info">
+                    <h6>
+                      Jorch morik
+                    </h6>
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                  </div>
+                  <i class="fa fa-quote-left" aria-hidden="true"></i>
+                </div>
+              </div>
+              <div class="client_text">
+                <p>
+                  chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="box">
+              <div class="client_id">
+                <div class="img-box">
+                 <img src="{{ url_for('static', filename='images/client-1.jpg') }}" alt="">
+                </div>
+                <div class="client_detail">
+                  <div class="client_info">
+                    <h6>
+                      Jorch morik
+                    </h6>
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                  </div>
+                  <i class="fa fa-quote-left" aria-hidden="true"></i>
+                </div>
+              </div>
+              <div class="client_text">
+                <p>
+                  chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- end client section -->
+
+  <!-- contact section -->
+
+  <section class="contact_section layout_padding">
+    <div class="container">
+      <div class="heading_container">
+        <h2>
+          Contact Us
+        </h2>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <form action="">
+            <div>
+              <input type="text" placeholder="Name" />
+            </div>
+            <div>
+              <input type="text" placeholder="Phone Number" />
+            </div>
+            <div>
+              <input type="email" placeholder="Email" />
+            </div>
+            <div>
+              <input type="text" class="message-box" placeholder="Message" />
+            </div>
+            <div class="d-flex ">
+              <button>
+                SEND
+              </button>
+            </div>
+          </form>
+        </div>
+        <div class="col-md-6">
+          <div class="map_container">
+            <div class="map">
+              <div id="googleMap" style="width:100%;height:100%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- end contact section -->
+
+
+  <!-- info section -->
+  <section class="info_section ">
+    <div class="container">
+      <h4>
+        Get In Touch
+      </h4>
+      <div class="row">
+        <div class="col-lg-10 mx-auto">
+          <div class="info_items">
+            <div class="row">
+              <div class="col-md-4">
+                <a href="">
+                  <div class="item ">
+                    <div class="img-box ">
+                      <i class="fa fa-map-marker" aria-hidden="true"></i>
+                    </div>
+                    <p>
+                      Lorem Ipsum is simply dummy text
+                    </p>
+                  </div>
+                </a>
+              </div>
+              <div class="col-md-4">
+                <a href="">
+                  <div class="item ">
+                    <div class="img-box ">
+                      <i class="fa fa-phone" aria-hidden="true"></i>
+                    </div>
+                    <p>
+                      +02 1234567890
+                    </p>
+                  </div>
+                </a>
+              </div>
+              <div class="col-md-4">
+                <a href="">
+                  <div class="item ">
+                    <div class="img-box">
+                      <i class="fa fa-envelope" aria-hidden="true"></i>
+                    </div>
+                    <p>
+                      demo@gmail.com
+                    </p>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="social-box">
+      <h4>
+        Follow Us
+      </h4>
+      <div class="box">
+        <a href="">
+          <i class="fa fa-facebook" aria-hidden="true"></i>
+        </a>
+        <a href="">
+          <i class="fa fa-twitter" aria-hidden="true"></i>
+        </a>
+        <a href="">
+          <i class="fa fa-youtube" aria-hidden="true"></i>
+        </a>
+        <a href="">
+          <i class="fa fa-instagram" aria-hidden="true"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- end info_section -->
 {% endblock %}
