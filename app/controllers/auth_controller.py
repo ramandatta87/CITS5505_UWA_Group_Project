@@ -54,6 +54,7 @@ def login():
         # Check if the user exists and the password is correct
         user = User.query.filter_by(email=form.email.data).first()
         if user and check_password_hash(user.password_hash, form.password.data):
+            login_user(user, remember=form.remember_me.data)
             session['logged_in'] = True
             session['user_name'] = f"{user.first_name} {user.last_name}"
             session['user_id'] = user.id
@@ -107,27 +108,21 @@ CSSE DevConnect
 
 # Route for changing password
 @auth.route('/change_password', methods=['GET', 'POST'])
+@login_required
 def change_password():
-    if not session.get('logged_in'):
-        flash("Please log in to access this page.", "info")
-        return redirect(url_for('auth.login'))
-    
+    """
+    Route to change the user's password.
+    """
     form = ChangePasswordForm()
     if form.validate_on_submit():
-        user = User.query.get(session['user_id'])  # Fetch the current user based on session user_id
-
-        if not check_password_hash(user.password_hash, form.old_password.data):
-            flash('Invalid old password.', 'error')
-            return render_template('auth/change_password.html', form=form)
-
-        # Update the password
-        user.password_hash = generate_password_hash(form.new_password.data)
-        db.session.commit()
-        
-        session.clear()  # Clear the session to log out the user
-        flash('Your password has been updated! Please log in again.', 'success')
-        return redirect(url_for('auth.login'))
-    
+        user = User.query.filter_by(id=current_user.id).first()
+        if user and user.check_password(form.old_password.data):
+            user.set_password(form.new_password.data)
+            db.session.commit()
+            flash('Your password has been updated.', 'success')
+            return redirect(url_for('auth.change_password'))
+        else:
+            flash('Old password is incorrect.', 'danger')
     return render_template('auth/change_password.html', form=form)
 
 # Route for viewing and editing user profile

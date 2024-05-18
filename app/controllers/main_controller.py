@@ -18,6 +18,7 @@ def index():
     Index route. Redirects to posts page if user is authenticated, otherwise renders index page.
     """
     if current_user.is_authenticated:
+        print("User is authenticated")
         return redirect(url_for('main.posts'))
     else:
         login_status = session.get('logged_in', False)
@@ -76,7 +77,7 @@ def add_post():
             return redirect(url_for('main.add_post'))
         else:
             flash("Blog Post Submitted Successfully")
-            return redirect(url_for('main.view_post', post_id=post.id))
+            return redirect(url_for('main.view_post', post_id=post.id, origin='posts'))
 
     return render_template("/main/add_post.html", form=form)
 
@@ -95,27 +96,11 @@ def api_posts():
     """
     API endpoint to fetch posts based on filters and sorting.
     """
+    page = request.args.get('page', 1, type=int)
     order = request.args.get('order', 'asc')
-    filter_by = request.args.get('filter_by', 'author')
-    filter_value = request.args.get('filter_value', '')
-
-    query = Posts.query.filter_by(is_draft=False).join(User, Posts.author_id == User.id).join(Tag, Posts.tag_id == Tag.id)
-
-    if filter_by and filter_value:
-        if filter_by == 'author':
-            query = query.filter((User.first_name.ilike(f'%{filter_value}%')) | (User.last_name.ilike(f'%{filter_value}%')))
-        elif filter_by == 'title':
-            query = query.filter(Posts.title.ilike(f'%{filter_value}%'))
-        elif filter_by == 'tag':
-            query = query.filter(Tag.tag.ilike(f'%{filter_value}%'))
-
-    if order == 'desc':
-        query = query.order_by(Posts.date_posted.desc())
-    else:
-        query = query.order_by(Posts.date_posted.asc())
-
-    posts = query.all()
-
+    posts_query = Posts.query.filter_by(is_draft=False).order_by(Posts.date_posted.asc() if order == 'asc' else Posts.date_posted.desc())
+    pagination = posts_query.paginate(page=page, per_page=10, error_out=False)
+    posts = pagination.items
     posts_data = []
     for post in posts:
         post_data = {
@@ -124,12 +109,13 @@ def api_posts():
             'content': post.content,
             'author_first_name': post.author.first_name,
             'author_last_name': post.author.last_name,
-            'tag': post.tag.tag,
-            'date_posted': post.date_posted.strftime('%B %d, %Y')
+            'tag': post.tag.tag if post.tag else 'N/A',
+            'date_posted': post.date_posted.strftime('%B %d, %Y'),
+            'answered': post.answered,
+            'career_preparation': post.career_preparation
         }
         posts_data.append(post_data)
-
-    return jsonify(posts_data)
+    return jsonify(posts_data=posts_data, has_next=pagination.has_next)
 
 @main.route('/api/autocomplete_posts', methods=['GET'])
 def autocomplete_posts():
@@ -162,8 +148,18 @@ def my_posts():
     """
     Route to display the user's posts.
     """
-    user_posts = Posts.query.filter_by(author_id=current_user.id, is_draft=False).order_by(Posts.date_posted.desc()).all()
-    return render_template('main/my_posts.html', posts=user_posts)
+    page = request.args.get('page', 1, type=int)
+    order = request.args.get('order', 'asc')
+    heading = "My Posts"
+    
+    my_posts_query = Posts.query.filter_by(author_id=current_user.id, is_draft=False).order_by(
+        Posts.date_posted.asc() if order == 'asc' else Posts.date_posted.desc()
+    )
+    
+    pagination = my_posts_query.paginate(page=page, per_page=10, error_out=False)
+    my_posts = pagination.items
+    
+    return render_template("main/my_posts.html", posts=my_posts, pagination=pagination, heading=heading, origin='my_posts')
 
 @main.route('/post/<int:post_id>', methods=['GET', 'POST'])
 @login_required
@@ -171,7 +167,9 @@ def view_post(post_id):
     """
     Route to view a specific post.
     """
-    post = Posts.query.filter_by(id=post_id, is_draft=False).first_or_404()
+    post = Posts.query.get_or_404(post_id)
+    origin = request.args.get('origin', 'posts')  # Default to 'posts' if not provided
+
     author = User.query.get_or_404(post.author_id)
     replies = Reply.query.filter_by(post_id=post_id).order_by(Reply.timestamp.asc()).all()
     form = ReplyForm()
@@ -187,9 +185,9 @@ def view_post(post_id):
         db.session.add(reply)
         db.session.commit()
         flash('Your reply has been added.', 'success')
-        return redirect(url_for('main.view_post', post_id=post_id))
+        return redirect(url_for('main.view_post', post_id=post_id, origin=origin))
 
-    return render_template('main/view_post.html', post=post, author=author, replies=replies, form=form)
+    return render_template('main/view_post.html', post=post, author=author, replies=replies, form=form, origin=origin)
 
 @main.route('/post/toggle_answer/<int:reply_id>', methods=['POST'])
 @login_required
@@ -266,70 +264,20 @@ def edit_post(post_id):
 @main.route("/posts", methods=["GET", "POST"])
 def posts():
     """
-    Route to display posts with filters and sorting.
+    Route to display all posts.
     """
-    form = FilterSortForm()
-    query = Posts.query.filter_by(is_draft=False)
-
-    search_query = request.args.get('q', '')
-
-    if search_query:
-        if search_query.startswith('[') and search_query.endswith(']'):
-            tag_name = search_query[1:-1]
-            tag = Tag.query.filter(Tag.tag.ilike(f'%{tag_name}%')).first()
-            if tag:
-                query = query.filter_by(tag_id=tag.id)
-            else:
-                query = query.filter_by(id=None)  # No results
-        else:
-            query = query.filter(
-                (Posts.title.ilike(f'%{search_query}%')) |
-                (Posts.content.ilike(f'%{search_query}%'))
-            )
-    else:
-        if form.validate_on_submit():
-            filter_by = form.filter_by.data
-            filter_value = form.filter_value.data
-            order = form.order.data
-
-            if filter_by == 'author':
-                query = query.join(User).filter(User.first_name.contains(filter_value) | User.last_name.contains(filter_value))
-            elif filter_by == 'title':
-                query = query.filter(Posts.title.contains(filter_value))
-            elif filter_by == 'tag':
-                query = query.join(Tag).filter(Tag.tag.contains(filter_value))
-
-            if order == 'asc':
-                query = query.order_by(Posts.date_posted.asc())
-            else:
-                query = query.order_by(Posts.date_posted.desc())
-
-    posts = query.all()
-    return render_template('main/posts.html', form=form, posts=posts, search_query=search_query)
-
-@main.route('/post/<int:post_id>/reply', methods=['GET', 'POST'])
-@login_required
-def reply(post_id):
-    """
-    Route to reply to a specific post.
-    """
-    form = ReplyForm()
-    post = Posts.query.get_or_404(post_id)
-
-    if form.validate_on_submit():
-        reply = Reply(
-            post_id=post_id,
-            author_id=current_user.id,
-            answer=form.answer.data,
-            answered_accepted=False,
-            deleted=False
-        )
-        db.session.add(reply)
-        db.session.commit()
-        flash('Your reply has been added.', 'success')
-        return redirect(url_for('main.view_post', post_id=post_id))
-
-    return render_template('main/reply.html', title='Reply to Post', form=form, post=post)
+    page = request.args.get('page', 1, type=int)
+    order = request.args.get('order', 'asc')
+    heading = "All Posts"
+    
+    all_posts_query = Posts.query.filter_by(is_draft=False).order_by(
+        Posts.date_posted.asc() if order == 'asc' else Posts.date_posted.desc()
+    )
+    
+    pagination = all_posts_query.paginate(page=page, per_page=10, error_out=False)
+    all_posts = pagination.items
+    
+    return render_template("main/posts.html", posts=all_posts, pagination=pagination, heading=heading, origin='posts')
 
 @main.route("/search", methods=["GET"])
 def search():
@@ -382,7 +330,7 @@ def favorite_post(post_id):
         db.session.commit()
         flash('Post added to favorites', 'success')
 
-    return redirect(url_for('main.view_post', post_id=post_id))
+    return redirect(url_for('main.view_post', post_id=post_id, origin='posts'))
 
 @main.route('/my_favorites')
 @login_required
@@ -390,9 +338,35 @@ def my_favorites():
     """
     Route to display the user's favorite posts.
     """
-    favorite_posts = FavoritePost.query.filter_by(user_id=current_user.id).all()
-    posts = [favorite.post for favorite in favorite_posts]
-    return render_template('main/my_favorites.html', posts=posts)
+    page = request.args.get('page', 1, type=int)
+    order = request.args.get('order', 'asc')
+    heading = "Favorite Posts"
+    
+    favorite_posts_query = (
+        db.session.query(Posts)
+        .join(FavoritePost, Posts.id == FavoritePost.post_id)
+        .filter(FavoritePost.user_id == current_user.id)
+        .order_by(Posts.date_posted.asc() if order == 'asc' else Posts.date_posted.desc())
+    )
+    
+    pagination = favorite_posts_query.paginate(page=page, per_page=10, error_out=False)
+    favorite_posts = pagination.items
+    
+    return render_template("main/my_favorites.html", posts=favorite_posts, pagination=pagination, heading=heading, origin='my_favorites')
+
+@main.route('/remove_favorite/<int:post_id>', methods=['POST'])
+@login_required
+def remove_favorite(post_id):
+    """
+    Route to remove a post from favorites.
+    """
+    favorite = FavoritePost.query.filter_by(user_id=current_user.id, post_id=post_id).first()
+    if favorite:
+        db.session.delete(favorite)
+        db.session.commit()
+        flash('Post removed from favorites', 'info')
+
+    return redirect(url_for('main.my_favorites'))
 
 @main.route('/about')
 def about():
@@ -407,14 +381,49 @@ def my_answers():
     """
     Route to display posts answered by the user.
     """
-    form = FilterSortForm()
-    posts_with_my_replies = (
+    page = request.args.get('page', 1, type=int)
+    order = request.args.get('order', 'asc')
+    heading = "My Answers"
+    
+    posts_with_my_replies_query = (
         db.session.query(Posts)
         .join(Reply, Posts.id == Reply.post_id)
         .filter(Reply.author_id == current_user.id, Posts.is_draft == False)
-        .all()
+        .order_by(Posts.date_posted.asc() if order == 'asc' else Posts.date_posted.desc())
     )
-    return render_template('main/my_answers.html', posts=posts_with_my_replies, form=form)
+    
+    pagination = posts_with_my_replies_query.paginate(page=page, per_page=10, error_out=False)
+    posts_with_my_replies = pagination.items
+    
+    return render_template('main/my_answers.html', posts=posts_with_my_replies, pagination=pagination, heading=heading, origin='my_answers')
+
+@main.route('/post/<int:post_id>/view_reply', methods=['GET', 'POST'])
+@login_required
+def view_reply(post_id):
+    """
+    Route to view a specific post that was answered by the user.
+    """
+    post = Posts.query.get_or_404(post_id)
+    origin = request.args.get('origin', 'posts')  # Default to 'posts' if not provided
+
+    author = User.query.get_or_404(post.author_id)
+    replies = Reply.query.filter_by(post_id=post_id).order_by(Reply.timestamp.asc()).all()
+    form = ReplyForm()
+
+    if form.validate_on_submit():
+        reply = Reply(
+            post_id=post_id,
+            author_id=current_user.id,
+            answer=form.answer.data,
+            answered_accepted=False,
+            deleted=False
+        )
+        db.session.add(reply)
+        db.session.commit()
+        flash('Your reply has been added.', 'success')
+        return redirect(url_for('main.view_reply', post_id=post_id, origin=origin))
+
+    return render_template('main/view_post.html', post=post, author=author, replies=replies, form=form, origin=origin)
 
 @main.route('/api/my_answers_posts', methods=['GET'])
 @login_required
@@ -475,8 +484,13 @@ def posts_by_tag(tag_id):
     Route to display posts by a specific tag.
     """
     tag = Tag.query.get_or_404(tag_id)
-    posts = Posts.query.filter_by(tag_id=tag_id, is_draft=False).all()
-    return render_template("main/posts_by_tag.html", tag=tag, posts=posts)
+    page = request.args.get('page', 1, type=int)
+    posts_query = Posts.query.filter_by(tag_id=tag_id, is_draft=False).order_by(Posts.date_posted.desc())
+    
+    pagination = posts_query.paginate(page=page, per_page=10, error_out=False)
+    posts = pagination.items
+    
+    return render_template("main/posts_by_tag.html", tag=tag, posts=posts, pagination=pagination)
 
 @main.before_app_request
 def add_tags_to_sidebar():
@@ -499,17 +513,37 @@ def career():
     """
     Route to display career preparation posts.
     """
-    career_posts = Posts.query.filter_by(career_preparation=True, is_draft=False).all()
-    return render_template("main/career.html", posts=career_posts)
+    page = request.args.get('page', 1, type=int)
+    order = request.args.get('order', 'asc')
+    heading = "Career Preparation"
+    
+    career_posts_query = Posts.query.filter_by(career_preparation=True, is_draft=False).order_by(
+        Posts.date_posted.asc() if order == 'asc' else Posts.date_posted.desc()
+    )
+    
+    pagination = career_posts_query.paginate(page=page, per_page=10, error_out=False)
+    career_posts = pagination.items
+    
+    return render_template("main/posts.html", posts=career_posts, pagination=pagination, heading=heading, origin='career')
 
-@main.route("/uni_preparation")
+@main.route("/uni_preparation", methods=["GET"])
 @login_required
 def uni_preparation():
     """
     Route to display unit preparation posts.
     """
-    uni_preparation_posts = Posts.query.filter_by(career_preparation=False, is_draft=False).all()
-    return render_template("main/uni_preparation.html", posts=uni_preparation_posts)
+    page = request.args.get('page', 1, type=int)
+    order = request.args.get('order', 'asc')
+    heading = "Unit Preparation"
+    
+    uni_preparation_posts_query = Posts.query.filter_by(career_preparation=False, is_draft=False).order_by(
+        Posts.date_posted.asc() if order == 'asc' else Posts.date_posted.desc()
+    )
+    
+    pagination = uni_preparation_posts_query.paginate(page=page, per_page=10, error_out=False)
+    uni_preparation_posts = pagination.items
+    
+    return render_template("main/posts.html", posts=uni_preparation_posts, pagination=pagination, heading=heading, origin='uni_preparation')
 
 @main.route('/drafts')
 @login_required
@@ -517,8 +551,47 @@ def drafts():
     """
     Route to display draft posts.
     """
-    user_drafts = Posts.query.filter_by(author_id=current_user.id, is_draft=True).order_by(Posts.date_posted.desc()).all()
-    return render_template('main/drafts.html', posts=user_drafts)
+    page = request.args.get('page', 1, type=int)
+    order = request.args.get('order', 'asc')
+    heading = "My Draft Posts"
+    
+    user_drafts_query = Posts.query.filter_by(author_id=current_user.id, is_draft=True).order_by(
+        Posts.date_posted.asc() if order == 'asc' else Posts.date_posted.desc()
+    )
+    
+    pagination = user_drafts_query.paginate(page=page, per_page=10, error_out=False)
+    user_drafts = pagination.items
+    
+    return render_template('main/drafts.html', posts=user_drafts, pagination=pagination, heading=heading, origin='drafts')
+
+@main.route('/post/<int:post_id>/view_draft', methods=['GET', 'POST'])
+@login_required
+def view_draft(post_id):
+    """
+    Route to view a specific draft post.
+    """
+    post = Posts.query.get_or_404(post_id)
+    origin = request.args.get('origin', 'drafts')  # Default to 'drafts' if not provided
+
+    author = User.query.get_or_404(post.author_id)
+    replies = Reply.query.filter_by(post_id=post_id).order_by(Reply.timestamp.asc()).all()
+    form = ReplyForm()
+
+    if form.validate_on_submit():
+        reply = Reply(
+            post_id=post_id,
+            author_id=current_user.id,
+            answer=form.answer.data,
+            answered_accepted=False,
+            deleted=False
+        )
+        db.session.add(reply)
+        db.session.commit()
+        flash('Your reply has been added.', 'success')
+        return redirect(url_for('main.view_draft', post_id=post_id, origin=origin))
+
+    return render_template('main/view_post.html', post=post, author=author, replies=replies, form=form, origin=origin)
+
 
 @main.route('/post/<int:post_id>/edit_draft', methods=['GET', 'POST'])
 @login_required
@@ -527,6 +600,7 @@ def edit_draft(post_id):
     Route to edit a draft post.
     """
     post = Posts.query.get_or_404(post_id)
+    origin = request.args.get('origin', 'posts')  # Default to 'posts' if not provided
 
     if post.author_id != current_user.id:
         flash('You are not authorized to edit this post.', 'danger')
@@ -547,15 +621,14 @@ def edit_draft(post_id):
             post.is_draft = False  # Remove draft status
         db.session.commit()
         flash('Your post has been updated and published!', 'success')
-        return redirect(url_for('main.view_post', post_id=post.id))
+        return redirect(url_for('main.view_post', post_id=post.id, origin=origin))
 
     elif request.method == 'GET':
         form.title.data = post.title
         form.content.data = post.content
         form.tag.data = post.tag.tag if post.tag else ''
 
-    return render_template('main/edit_draft.html', title='Edit Draft', form=form, post=post)
-
+    return render_template('main/edit_draft.html', title='Edit Draft', form=form, post=post, origin=origin)
 
 @main.route('/post/<int:post_id>/release_draft', methods=['POST'])
 @login_required
