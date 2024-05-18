@@ -175,3 +175,4 @@ app/models/__pycache__/*
 app/__pycache__/forms.cpython-312.pyc
 venv/*
 **/__pycache__/
+app/test.db
