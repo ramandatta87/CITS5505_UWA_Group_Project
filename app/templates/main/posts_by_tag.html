@@ -1,20 +1,80 @@
 {% extends "includes/layout.html" %}
-{% block title %}Posts tagged with {{ tag.tag }}{% endblock %}
+{% block title %}Posts by Tag{% endblock %}
 {% block content %}
-<div class="posts">
-    <h1>Posts tagged with "{{ tag.tag }}"</h1>
-    <ul class="list-group">
-        {% for post in posts %}
-        <li class="list-group-item">
-            <h5><a href="{{ url_for('main.view_post', post_id=tag.id) }}">{{ post.title }}</a></h5>
-            <p>by {{ post.author.first_name }} {{ post.author.last_name }} on {{ post.date_posted.strftime('%B %d, %Y') }}</p>
-            <p>{{ post.content | safe }}</p>
-            <p>Tag: {{ post.tag.tag if post.tag else 'N/A' }}</p>
-        </li>
-        {% endfor %}
-        {% if not posts %}
-        <li class="list-group-item">No posts found for this tag.</li>
-        {% endif %}
-    </ul>
+
+<!-- Display Flash Messages -->
+{% for message in get_flashed_messages() %}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
+{% endfor %}
+
+<div class="card p-3 mt-3">
+    <div class="row">
+        {% include "includes/sidebar.html" %}
+
+        <div class="col-md-9">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1>Posts tagged with "{{ tag.tag }}"</h1>
+                <a href="{{ url_for('main.tags') }}" class="btn btn-secondary">Back to Tags</a>
+            </div>
+
+            <!-- Posts List -->
+            <ul class="list-group" id="posts-list">
+                {% for post in posts %}
+                <li class="list-group-item">
+                    <h5><a href="{{ url_for('main.view_post', post_id=post.id, origin='tag', tag_id=tag.id) }}">{{ post.title }}</a></h5>
+                    <p>Tag: {{ post.tag.tag if post.tag else 'N/A' }}</p>
+                    <p>{{ post.content|safe }}</p>
+                    <p class="authorpost">by <span class="author_n">{{ post.author.first_name }} {{ post.author.last_name }}</span> on {{ post.date_posted.strftime('%B %d, %Y') }}</p>
+                </li>
+                {% endfor %}
+                {% if not posts %}
+                <li class="list-group-item">No posts found.</li>
+                {% endif %}
+            </ul>
+            
+            <!-- Pagination Controls -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if pagination.has_prev %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('main.posts_by_tag', tag_id=tag.id, page=pagination.prev_num) }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+                    {% for page_num in pagination.iter_pages() %}
+                    <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                        <a class="page-link" href="{{ url_for('main.posts_by_tag', tag_id=tag.id, page=page_num) }}">{{ page_num }}</a>
+                    </li>
+                    {% endfor %}
+                    
+                    {% if pagination.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('main.posts_by_tag', tag_id=tag.id, page=pagination.next_num) }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
