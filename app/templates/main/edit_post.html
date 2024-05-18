@@ -1,47 +1,82 @@
 {% extends "includes/layout.html" %}
 {% block title %}Edit Post{% endblock %}
 {% block content %}
-
+ 
 <!-- Display Flash Messages -->
 {% for message in get_flashed_messages() %}
 <div class="alert alert-warning alert-dismissible fade show" role="alert">
     {{ message }}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 {% endfor %}
+<div class="card p-3" style="margin-top: -10px;">
+    <!-- Posts List -->
+<Div class="row">
 
+    {% include "includes/sidebar.html" %}
+    
+<div class="col-md-9">
 <h1>Edit Post</h1>
 <br/>
-<div class="shadow p-3 mb-5 bg-body rounded">
-    <form method="POST">
+<div class="p-3 mb-5 bg-body rounded">
+<form method="POST">
         {{ form.hidden_tag() }}
-
         <!-- Title Field -->
-        <div class="mb-3">
+<div class="mb-3">
             {{ form.title.label(class="form-label", for="title") }}
             {{ form.title(class="form-control", id="title") }}
-        </div>
-
+</div>
+ 
         <!-- Tag Field -->
-        <div class="mb-3">
+<div class="mb-3">
             {{ form.tag.label(class="form-label", for="tag") }}
             {{ form.tag(class="form-control", id="autocomplete") }}
-        </div>
-
+</div>
+ 
+        <!-- Question Type Field -->
+<div class="mb-3">
+            {{ form.question_type.label(class="form-label") }}
+            {% for subfield in form.question_type %}
+<div class="form-check">
+                    {{ subfield(class="form-check-input") }}
+<label class="form-check-label" for="{{ subfield.id }}">{{ subfield.label.text }}</label>
+</div>
+            {% endfor %}
+</div>
+ 
         <!-- Content Field -->
-        <div class="mb-3">
+<div class="mb-3">
             {{ form.content.label(class="form-label", for="content") }}
             {{ form.content(class="form-control", id="content", rows="5") }}
-        </div>
-
-        <!-- Submit and Cancel Buttons -->
-        <div class="mb-3">
+</div>
+ 
+        <!-- Submit Button -->
+<div class="mb-3">
             {{ form.submit(class="btn btn-secondary", id="submit") }}
-            <a href="{{ url_for('main.view_post', post_id=post.id) }}" class="btn btn-danger">Cancel</a>
-        </div>
-    </form>
+</div>
+ 
+        <!-- Release Draft Button -->
+        {% if post.is_draft %}
+<div class="mb-3">
+<a href="{{ url_for('main.release_draft', post_id=post.id) }}" class="btn btn-success">Release Draft</a>
+</div>
+        {% endif %}
+ 
+        <!-- Cancel Button -->
+<div class="mb-3">
+<a href="{{ url_for('main.posts') }}" class="btn btn-danger">Cancel</a>
+</div>
+</form>
     {{ ckeditor.load() }}
     {{ ckeditor.config(name='content') }}
 </div>
-
+</div></Div></div>
+{% endblock %}
+{% block scripts %}
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Include jQuery UI -->
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<!-- Include the autocomplete script -->
+<script src="{{ url_for('static', filename='js/autocomplete.js') }}"></script>
 {% endblock %}

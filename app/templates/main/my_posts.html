@@ -10,20 +10,71 @@
 </div>
 {% endfor %}
 
-<h1>My Posts</h1>
-<br/>
-<div class="shadow p-3 mb-5 bg-body rounded">
-    <!-- Posts List -->
-    <ul class="list-group">
-        {% for post in posts %}
-        <li class="list-group-item">
-            <h5><a href="{{ url_for('main.view_post', post_id=post.id, origin='my_posts') }}">{{ post.title }}</a></h5>
-            <p>by {{ current_user.first_name }} {{ current_user.last_name }} on {{ post.date_posted.strftime('%B %d, %Y') }}</p>
-            <p>{{ post.content | safe }}</p>
-        </li>
-        {% endfor %}
-    </ul>
+<div class="card p-3 mt-3">
+    <div class="row">
+        {% include "includes/sidebar.html" %}
 
+        <div class="col-md-9">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1>My Posts</h1>
+                <a href="{{ url_for('main.posts') }}" class="btn btn-secondary">Back to All Posts</a>
+            </div>
+
+            <!-- Posts List -->
+            <ul class="list-group" id="posts-list">
+                {% for post in posts %}
+                <li class="list-group-item">
+                    <h5><a href="{{ url_for('main.view_post', post_id=post.id, origin='my_posts') }}">{{ post.title }}</a></h5>
+                    <p>Tag: {{ post.tag.tag if post.tag else 'N/A' }}</p>
+                    <p>{{ post.content|safe }}</p>
+                    <p class="authorpost">by <span class="author_n">{{ post.author.first_name }} {{ post.author.last_name }}</span> on {{ post.date_posted.strftime('%B %d, %Y') }}</p>
+                </li>
+                {% endfor %}
+                {% if not posts %}
+                <li class="list-group-item">No posts found.</li>
+                {% endif %}
+            </ul>
+            
+            <!-- Pagination Controls -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if pagination.has_prev %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('main.my_posts', page=pagination.prev_num) }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+                    {% for page_num in pagination.iter_pages() %}
+                    <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                        <a class="page-link" href="{{ url_for('main.my_posts', page=page_num) }}">{{ page_num }}</a>
+                    </li>
+                    {% endfor %}
+                    
+                    {% if pagination.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('main.my_posts', page=pagination.next_num) }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
 </div>
 
 {% endblock %}

@@ -1,0 +1,51 @@
+<!-- File: templates/sidebar.html -->
+<div class="col-md-3 mylist mybd">
+    <!-- Dashboard Header -->
+    <!-- <h4 class="pt-2">My Dashboard</h4> -->
+    
+    <!-- Bootstrap List Group for better styling -->
+    <div class="list-group mb-3">
+        <!-- Always visible links -->
+        <a href="{{ url_for('main.add_post') }}" class="list-group-item list-group-item-action">
+            <i class="fa fa-question-circle"></i> Ask Question
+        </a>
+        <a href="{{ url_for('main.posts') }}" class="list-group-item list-group-item-action">
+            <i class="fa fa-list"></i> All Posts
+        </a>
+        <a href="{{ url_for('main.tags') }}" class="list-group-item list-group-item-action">
+            <i class="fa fa-tags"></i> Tags
+        </a>
+        <a href="{{ url_for('main.career') }}" class="list-group-item list-group-item-action">
+            <i class="fa fa-briefcase"></i> Career Preparation
+        </a>
+        <a href="{{ url_for('main.uni_preparation') }}" class="list-group-item list-group-item-action">
+            <i class="fa fa-graduation-cap"></i> Unit Preparation
+        </a>
+    </div>
+
+    <!-- Links visible only to authenticated users -->
+    {% if current_user.is_authenticated %}
+        <div class="card">
+            <div class="card-header">
+                <h5>My Content</h5>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="{{ url_for('main.my_posts') }}" class="list-group-item list-group-item-action">
+                    <i class="fa fa-user"></i> My Posts
+                </a>
+                <a href="{{ url_for('main.my_favorites') }}" class="list-group-item list-group-item-action">
+                    <i class="fa fa-star"></i> Favorite Posts
+                </a>
+                <a href="{{ url_for('main.my_answers') }}" class="list-group-item list-group-item-action">
+                    <i class="fa fa-reply"></i> My Answers
+                </a>
+                <a href="{{ url_for('main.drafts') }}" class="list-group-item list-group-item-action">
+                    <i class="fa fa-pencil"></i> My Draft Posts
+                </a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Make sure to include Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">

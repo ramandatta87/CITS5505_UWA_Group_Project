@@ -3,42 +3,90 @@
 {% block content %}
 
 <!-- Display Flash Messages -->
-{% for message in get_flashed_messages() %}
-<div class="alert alert-warning alert-dismissible fade show" role="alert">
-    {{ message }}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-{% endfor %}
-
-<h1>Posts{% if search_query %} - {{ search_query }}{% endif %}</h1>
-<br/>
-<div class="shadow p-3 mb-5 bg-body rounded">
-    <!-- Sort Form -->
-    <form id="filter-sort-form" method="POST" action="{{ url_for('main.posts') }}" class="mb-4">
-        {{ form.hidden_tag() }}
-        <div class="mb-3">
-            {{ form.order.label(class="form-label") }}
-            {{ form.order(class="form-control", id="order") }}
+<div class="row p-0">
+    <div class="col-md-12 p-0">
+        {% for category, message in get_flashed_messages(with_categories=true) %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-    </form>
-    
-    <!-- Posts List -->
-    <ul class="list-group" id="posts-list">
-        {% for post in posts %}
-        <li class="list-group-item">
-            <h5><a href="{{ url_for('main.view_post', post_id=post.id, origin='posts') }}">{{ post.title }}</a></h5>
-            <p>by {{ post.author.first_name }} {{ post.author.last_name }} on {{ post.date_posted.strftime('%B %d, %Y') }}</p>
-            <p>Tag: {{ post.tag.tag if post.tag else 'N/A' }}</p>
-            <p>{{ post.content|safe }}</p>
-        </li>
         {% endfor %}
-        {% if not posts %}
-        <li class="list-group-item">No posts found.</li>
-        {% endif %}
-    </ul>
-    {{ ckeditor.load() }}
-    {{ ckeditor.config(name='content') }}
+    </div>
 </div>
+
+<div class="card p-3 mt-3">
+    <!-- Posts List -->
+    <div class="row">
+        <!-- Sidebar -->
+        {% include "includes/sidebar.html" %}
+
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <h1>{{ heading }}</h1>
+                </div>
+            </div>
+
+            <ul class="list-group" id="posts-list">
+                {% for post in posts %}
+                <li class="list-group-item">
+                    <h5><a href="{{ url_for('main.view_post', post_id=post.id, origin=origin) }}">{{ post.title }}</a></h5>
+                    <p>Tag: {{ post.tag.tag if post.tag else 'N/A' }}</p>
+                    <p class="content-preview">{{ post.content|safe }}</p>
+                    <p class="authorpost">by <span class="author_n">{{ post.author.first_name }} {{ post.author.last_name }}</span> on {{ post.date_posted.strftime('%B %d, %Y') }}</p>
+                    <!-- <a href="{{ url_for('main.edit_draft', post_id=post.id, origin=origin) }}" class="btn btn-primary">Edit Draft</a> -->
+                </li>
+                {% endfor %}
+                {% if not posts %}
+                <li class="list-group-item">No posts found.</li>
+                {% endif %}
+            </ul>
+            
+            <!-- Pagination Controls -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if pagination.has_prev %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for(request.endpoint, page=pagination.prev_num, order=request.args.get('order', 'asc'), origin=origin) }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+                    {% for page_num in pagination.iter_pages() %}
+                    <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                        <a class="page-link" href="{{ url_for(request.endpoint, page=page_num, order=request.args.get('order', 'asc'), origin=origin) }}">{{ page_num }}</a>
+                    </li>
+                    {% endfor %}
+                    
+                    {% if pagination.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for(request.endpoint, page=pagination.next_num, order=request.args.get('order', 'asc'), origin=origin) }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+{{ ckeditor.load() }}
+{{ ckeditor.config(name='content') }}
 
 {% endblock %}
 

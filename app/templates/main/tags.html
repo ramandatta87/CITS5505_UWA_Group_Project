@@ -1,19 +1,42 @@
 {% extends "includes/layout.html" %}
 {% block title %}Tags{% endblock %}
 {% block content %}
-<div class="tags">
-    <h1>Tags</h1>
+
+<!-- Display Flash Messages -->
+{% for message in get_flashed_messages() %}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+
+<div class="card p-3 mt-3">
     <div class="row">
-        {% for tag in tags %}
-        <div class="col-md-4">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h5 class="card-title"><a href="{{ url_for('main.posts_by_tag', tag_id=tag.id) }}">{{ tag.tag }}</a></h5>
-                    <p class="card-text">Total Posts: {{ tag.post_count }}</p>
+        {% include "includes/sidebar.html" %}
+
+        <div class="col-md-9">
+            <h1>Tags</h1>
+            <!-- Tags List -->
+            <div class="row">
+                {% for tag in tags %}
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{{ url_for('main.posts_by_tag', tag_id=tag.id) }}">{{ tag.tag }}</a>
+                            </h5>
+                            <p class="card-text">
+                                <strong>Posts:</strong> {{ tag.post_count }}
+                            </p>
+                        </div>
+                    </div>
                 </div>
+                {% endfor %}
             </div>
+
+            
         </div>
-        {% endfor %}
     </div>
 </div>
+
 {% endblock %}
