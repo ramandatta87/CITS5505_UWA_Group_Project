@@ -177,3 +177,4 @@ venv/*
 **/__pycache__/
 app/test.db
 app/sqldb.db
+app/sqldb.db
