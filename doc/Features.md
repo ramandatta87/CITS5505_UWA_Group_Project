@@ -5,13 +5,8 @@ Allow users to create accounts, log in, and log out, manage their profiles, and 
 ![sign up](./document_images/login.png)
 #### Log in the account
 ![log in](./document_images/login.png)
-#### Remeber me
-If users click the "remeber me" box, the user will keep logging in current account except the user logs out the account.
-
-#### Log out the account
-
 #### Manage the profile
-
+![management](document_images/manage_profile.png)
 
 ### 2. Question Posting and Editing
 Users can post new questions and edit/update existing ones. Users can also save an unfinished question as a draft, and edit/post it in my draft posts.
@@ -56,7 +51,7 @@ Upon selecting a category such as "Unit Preparation" or "Career Preparation," us
 - **Tag**: Relevant tags that categorize the question.
 - **Author**: The name of the user who posted the question.
 - **Date**: When the question was posted.
-![All Posts](./document_images/Posts_all_posts.png)
+![All Posts](./document_images/allpost.png)
 ![Career Preparation](./document_images/Posts_Career_Preparation.png)
 ![Unit Preparation](./document_images/Posts_Unit_Perparation.png)
 ##### Post filter under tags
