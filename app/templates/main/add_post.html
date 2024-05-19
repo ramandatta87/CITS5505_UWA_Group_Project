@@ -16,9 +16,9 @@
         {% include "includes/sidebar.html" %}
         <div class="col-md" style="border: 1px solid #ccc;">
             <h1 style="background-image: linear-gradient(to right, blue, lightgreen); padding: 20px; color: white; text-align: center;">Ask Your Question</h1>
-            <br/>
+            <br>
             <p>Fill out the form below to post a question.</p>
-            <br/>
+            <br>
             <form method="POST">
                 {{ form.hidden_tag() }}
                 <!-- Question Type Field -->
@@ -43,7 +43,7 @@
                     {{ form.tag.label(class="form-label", for="tag") }}
                     {{ form.tag(class="form-control", id="autocomplete") }}
                 </div>
-                <br/>
+                <br>
                 <!-- Content Field -->
                 <div class="mb-3 mt-4">
                     {{ form.content.label(class="form-label", for="content") }}

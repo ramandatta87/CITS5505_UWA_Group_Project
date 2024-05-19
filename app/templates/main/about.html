@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<html lang="en">
+
 {% extends "includes/layout.html" %}
 {% block title %}Post Question{% endblock %}
 {% block content %}
@@ -24,31 +27,31 @@
 
 
 <h1 style="background-image: linear-gradient(to right, blue, lightgreen); padding: 20px; color: white; text-align: center;">About Us</h1>
-<p>
-    CSSE DevConnect is an open community for all students who take units under CSSE Department. 
-    We help you get answers to your toughest coding or career questions, share knowledge with your coworkers in private, and find your next dream job.
-    <div class="img-box">
-        <img src="{{ url_for('static', filename='images/dev-connect-logo.jpeg') }}" alt="">
-    </div>
-    Over generations, CSSE DevConnect has accumulated a wealth of knowledge and experience from past CSSE students, 
-    encompassing learning strategies, career preparation tips, skills, and more. 
-    Join us to leverage this collective wisdom, streamline your academic journey, and advance your career with confidence.
-
-    Our mission is to 
-    <br>
-    <br>
-    <b>
-        Help CSSE students to on just thrive in their academic journey but also to prepare them for the workforce.
-    </b>
-    <br>
-    <br>
-    We all feel it's hard and slow to find the right answers to our questions about the unit questions and career preparation questions
-    even though we have a lot of resources available because they are scattered all over the place and very time-consuming to find. 
-    Even though there are questions and answers from previous years but they are not available for new students.
-
-    <br>
-    But with CSSE DevConnect, you can quickly find solutions to your queries without having to sift through irrelevant information.
-</p>
+    <p>
+        CSSE DevConnect is an open community for all students who take units under CSSE Department. 
+        We help you get answers to your toughest coding or career questions, share knowledge with your coworkers in private, and find your next dream job.
+    </p>
+        <div class="img-box">
+            <img src="{{ url_for('static', filename='images/dev-connect-logo.jpeg') }}" alt="">
+        </div>
+    
+    <p>
+        Over generations, CSSE DevConnect has accumulated a wealth of knowledge and experience from past CSSE students, 
+        encompassing learning strategies, career preparation tips, skills, and more. 
+        Join us to leverage this collective wisdom, streamline your academic journey, and advance your career with confidence.
+        Our mission is to 
+        <br>
+        <br>
+        <b>
+            Help CSSE students to on just thrive in their academic journey but also to prepare them for the workforce.
+        </b>
+        <br><br>
+        We all feel it's hard and slow to find the right answers to our questions about the unit questions and career preparation questions
+        even though we have a lot of resources available because they are scattered all over the place and very time-consuming to find. 
+        Even though there are questions and answers from previous years but they are not available for new students.
+        <br>
+        But with CSSE DevConnect, you can quickly find solutions to your queries without having to sift through irrelevant information.
+    </p>
 
     {{ ckeditor.load() }}
     {{ ckeditor.config(name='content') }}
