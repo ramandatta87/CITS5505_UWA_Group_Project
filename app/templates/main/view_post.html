@@ -27,9 +27,20 @@
                 <button type="submit" class="btn btn-primary mb-3">Release Draft</button>
             </form>
             {% endif %}
-            
+
+            <!-- Mark as Favorite Button -->
+            <form method="POST" action="{{ url_for('main.favorite_post', post_id=post.id) }}">
+                {{ form.hidden_tag() }}
+                {% if current_user.is_authenticated %}
+                {% if post in current_user.favorites %}
+                <button type="submit" class="btn btn-warning mb-3">Unmark as Favorite</button>
+                {% else %}
+                <button type="submit" class="btn btn-primary mb-3">Mark as Favorite</button>
+                {% endif %}
+                {% endif %}
+            </form>
+
             <!-- Display existing replies -->
-            
             {% for reply in replies %}
             <div class="card mb-3">
                 <div class="card-body">
@@ -42,7 +53,6 @@
             <p style="font-size: larger; font-weight: bold; color: skyblue;">Put your answer here:</p>
 
             <!-- Reply form -->
-    
             <form method="post">
                 {{ form.hidden_tag() }}
                 <div class="mb-3">
