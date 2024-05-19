@@ -14,8 +14,8 @@ This web application is primarily designed as a learning Q&A and career preparat
 ## Function
 ### 1. User Account Management
 Allow users to create accounts, log in, and log out, manage their profiles, and reset password.
-#### Create Account(Sing up)
-![sing up](Readme_images\sing_up.png)
+#### Create Account(Sign up)
+
 #### Log in the account
 Readme_images\login.png
 #### Remeber me
