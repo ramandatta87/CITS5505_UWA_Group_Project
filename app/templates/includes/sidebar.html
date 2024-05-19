@@ -1,9 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+
 <!-- File: templates/sidebar.html -->
-<div class="col-md-3 mylist mybd">
+
+<div class="col-md-3 mylist mybd" >
     <!-- Dashboard Header -->
     <!-- <h4 class="pt-2">My Dashboard</h4> -->
     
     <!-- Bootstrap List Group for better styling -->
+    <div class="card-header">
+        <h5     >Question</h5>
+    </div>
     <div class="list-group mb-3">
         <!-- Always visible links -->
         <a href="{{ url_for('main.add_post') }}" class="list-group-item list-group-item-action">
@@ -24,7 +31,7 @@
     </div>
 
     <!-- Links visible only to authenticated users -->
-    {% if current_user.is_authenticated %}
+    {% if session.logged_in %}
         <div class="card">
             <div class="card-header">
                 <h5>My Content</h5>
@@ -42,7 +49,22 @@
                 <a href="{{ url_for('main.drafts') }}" class="list-group-item list-group-item-action">
                     <i class="fa fa-pencil"></i> My Draft Posts
                 </a>
+            </div>    
+        </div>
+        <br>
+        <div class="card">
+            <div class="card-header">
+                <h5>My Profile</h5>
             </div>
+            <div class="list-group list-group-flush">
+                
+                <a href="{{ url_for('auth.profile') }}" class="list-group-item list-group-item-action">
+                    <i class="fa fa-user"></i>Profile
+                </a>
+                <a href="{{ url_for('auth.logout') }}" class="list-group-item list-group-item-action">
+                    <i class="fa fa-sign-out"></i> Logout
+                </a>
+            </div>    
         </div>
     {% endif %}
 </div>

@@ -19,9 +19,28 @@
             <p>Tag: {{ post.tag.tag if post.tag else 'N/A' }}</p>
             <p>Author: {{ author.first_name }} {{ author.last_name }}</p>
             <p>Posted on: {{ post.date_posted.strftime('%B %d, %Y') }}</p>
-            
+
+            <!-- Release Draft Button -->
+            {% if post.is_draft %}
+            <form method="POST" action="{{ url_for('main.release_draft', post_id=post.id) }}">
+                {{ form.hidden_tag() }}
+                <button type="submit" class="btn btn-primary mb-3">Release Draft</button>
+            </form>
+            {% endif %}
+
+            <!-- Mark as Favorite Button -->
+            <form method="POST" action="{{ url_for('main.favorite_post', post_id=post.id) }}">
+                {{ form.hidden_tag() }}
+                {% if current_user.is_authenticated %}
+                {% if post in current_user.favorites %}
+                <button type="submit" class="btn btn-warning mb-3">Unmark as Favorite</button>
+                {% else %}
+                <button type="submit" class="btn btn-primary mb-3">Mark as Favorite</button>
+                {% endif %}
+                {% endif %}
+            </form>
+
             <!-- Display existing replies -->
-            <h2>Replies</h2>
             {% for reply in replies %}
             <div class="card mb-3">
                 <div class="card-body">
@@ -31,9 +50,9 @@
                 </div>
             </div>
             {% endfor %}
+            <p style="font-size: larger; font-weight: bold; color: skyblue;">Put your answer here:</p>
 
             <!-- Reply form -->
-            <h2>Your Answer</h2>
             <form method="post">
                 {{ form.hidden_tag() }}
                 <div class="mb-3">

@@ -15,7 +15,7 @@
         {% include "includes/sidebar.html" %}
 
         <div class="col-md-9">
-            <h1>My Answers</h1>
+            <h1 style="background-image: linear-gradient(to right, blue, lightgreen); padding: 20px; color: white; text-align: center;">My Answers</h1>
             <!-- Posts List -->
             <ul class="list-group" id="posts-list">
                 {% for post in posts %}
@@ -25,7 +25,7 @@
                     </h5>
                     <p>Tag: {{ post.tag.tag if post.tag else 'N/A' }}</p>
                     <p>{{ post.content|safe }}</p>
-                    <p class="authorpost">by <span class="author_n">{{ post.author.first_name }} {{ post.author.last_name }}</span> on {{ post.date_posted.strftime('%B %d, %Y') }}</p>
+                    <p class="authorpost">Author: <span class="author_n">{{ post.author.first_name }} {{ post.author.last_name }}</span> on {{ post.date_posted.strftime('%B %d, %Y') }}</p>
                 </li>
                 {% endfor %}
                 {% if not posts %}

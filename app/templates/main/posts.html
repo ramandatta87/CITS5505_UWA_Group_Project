@@ -25,11 +25,12 @@
         <!-- Main Content -->
         <div class="col-md-9">
             <!-- post_header.html -->
-            <div class="welcome" style="background-image: linear-gradient(to right, blue, lightgreen); padding: 10px; color: white; text-align: center;">
-                <p> Welcome and Enjoy Your Journey!</p>
+            <div class="welcome">
+                <p> Get Connected and Start Thriving!</p>
             </div>
             <div class="row mb-4">
-                <h1>{{ heading }}</h1>
+                <h1 style="background-image: linear-gradient(to right, blue, lightgreen); padding: 20px; color: white; text-align: center;">{{ heading }}</h1>
+                <!-- <h1>{{ heading }}</h1> -->
             </div>
 
             <ul class="list-group" id="posts-list">
@@ -37,8 +38,9 @@
                 <li class="list-group-item">
                     <h5><a href="{{ url_for('main.view_post', post_id=post.id, origin=origin) }}">{{ post.title }}</a></h5>
                     <p>Tag: {{ post.tag.tag if post.tag else 'N/A' }}</p>
+                    <p>{% if not post.career_preparation %}Unit-Question{% else %}Career-Question{% endif %}</p>
                     <p class="content-preview">{{ post.content|safe }}</p>
-                    <p class="authorpost">by <span class="author_n">{{ post.author.first_name }} {{ post.author.last_name }}</span> on {{ post.date_posted.strftime('%B %d, %Y') }}</p>
+                    <p class="authorpost">Author: <span class="author_n">{{ post.author.first_name }} {{ post.author.last_name }}</span> on {{ post.date_posted.strftime('%B %d, %Y') }}</p>
                     <!-- <a href="{{ url_for('main.edit_draft', post_id=post.id, origin=origin) }}" class="btn btn-primary">Edit Draft</a> -->
                 </li>
                 {% endfor %}
