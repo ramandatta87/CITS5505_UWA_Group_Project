@@ -55,13 +55,13 @@ Database setup using flask-migrate
 ```
 flask db init
 ```
-- Generate the initial migration scriptflask 
+- Generate the initial migration script 
 ```
-db migrate -m
+flask db migrate -m
 ```
-- Apply the migration to create the database and tablesflask 
+- Apply the migration to create the database and tables
 ```
-db upgrade
+flask db upgrade
 ```
 
 ### Run the Application
