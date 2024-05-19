@@ -49,11 +49,11 @@ To install all the dependencies, run the following command:
 cd CITS5505_UWA_Group_Project
 pip install -r requirements.txt
 ```
-### Database initialization(if not already initialized)
-Database setup using flask-migrate
+### Database Migration
+##Database setup using flask-migrate##
 - Initialize the migration repository (if not already initialized)
 ```
-flask db init
+flask init-db
 ```
 - Generate the initial migration script 
 ```
