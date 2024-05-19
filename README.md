@@ -13,7 +13,22 @@ This web application is primarily designed as a learning Q&A and career preparat
 
 ## Function
 ### 1. User Account Management
-Allow users to create accounts, log in, and log out, manage their profiles, and set preferences.
+Allow users to create accounts, log in, and log out, manage their profiles, and reset password.
+#### Create Account(Sing up)
+Readme_images\sing_up.png
+#### Log in the account
+Readme_images\login.png
+#### Remeber me
+If users click the "remeber me" box, the user will keep logging in current account except the user logs out the account.
+
+#### Log out the account
+
+#### Manage the profile
+
+
+
+
+
 ### 2. Question Posting and Editing
 Users can post new questions and edit/update existing ones.
 ### 3.	Question Categorization and Tagging
