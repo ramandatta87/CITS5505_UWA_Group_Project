@@ -76,25 +76,3 @@ To refine search results to include specific tags, users should use the format `
 #### Answer Question
 This application allows users to view detailed information about a specific question, see existing replies, and contribute their own answers. This functionality is central to fostering an interactive and helpful community on the platform.
 ![answer question](./document_images/answer_question.png)
-
-
-
-
-
-
-### 5. Voting and Sorting
-Allow users to vote on questions and answers to increase or decrease their priority on the page, helping other users find the most useful information faster.
-### 6. Marking Best Answers
-Allow question askers to select and mark one answer as the best answer, making it easier for other users to find solutions.
-### 7. Search and Filtering
-Provide powerful search functionality allowing users to filter and search questions and answers based on keywords, tags, users, etc.
-### 8.User Reputation and Badge System
-Provide users with a reputation or badge system based on their contributions (such as asking questions, providing answers, voting, etc.) to evaluate their credibility and potentially provide privileges or rewards.
-### 9. Community Management Tools
-Provide tools and features such as reporting, banning, deleting, etc., to manage inappropriate behavior and content and maintain community order.
-### 10. Community Dashboard
-Provide a dashboard or homepage that displays the most popular, recent, and unanswered questions, as well as other relevant information to help users navigate the platform.
-### 11. Notification and Alerts
-Allow users to receive notifications about their questions, answers, and comments to stay informed about relevant activity.
-
-## Getting Started
