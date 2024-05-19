@@ -56,5 +56,14 @@ def create_app(config_class=Config):
 
     # Register 'main' blueprint without URL prefix
     app.register_blueprint(main)
+
+    # Adding the init-db command
+    @app.cli.command('init-db')
+    def init_db():
+        """
+        Initialize the database.
+        """
+        db.create_all()
+        print("Initialized the database.")
     
     return app
