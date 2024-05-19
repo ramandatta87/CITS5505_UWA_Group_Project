@@ -102,7 +102,7 @@ def api_posts():
     API endpoint to fetch posts based on filters and sorting.
     """
     page = request.args.get('page', 1, type=int)
-    order = request.args.get('order', 'asc')
+    order = request.args.get('order', 'desc')
     posts_query = Posts.query.filter_by(is_draft=False).order_by(Posts.date_posted.asc() if order == 'asc' else Posts.date_posted.desc())
     pagination = posts_query.paginate(page=page, per_page=10, error_out=False)
     posts = pagination.items
@@ -156,7 +156,7 @@ def my_posts():
     Route to display the user's posts.
     """
     page = request.args.get('page', 1, type=int)
-    order = request.args.get('order', 'asc')
+    order = request.args.get('order', 'desc')
     heading = "My Posts"
     
     my_posts_query = Posts.query.filter_by(author_id=current_user.id, is_draft=False).order_by(
@@ -279,7 +279,7 @@ def posts():
     Route to display all posts.
     """
     page = request.args.get('page', 1, type=int)
-    order = request.args.get('order', 'asc')
+    order = request.args.get('order', 'desc')
     heading = "All Posts"
     
     all_posts_query = Posts.query.filter_by(is_draft=False).order_by(
@@ -359,7 +359,7 @@ def my_favorites():
     Route to display the user's favorite posts.
     """
     page = request.args.get('page', 1, type=int)
-    order = request.args.get('order', 'asc')
+    order = request.args.get('order', 'desc')
     heading = "Favorite Posts"
     
     favorite_posts_query = (
@@ -405,7 +405,7 @@ def my_answers():
     Route to display posts answered by the user.
     """
     page = request.args.get('page', 1, type=int)
-    order = request.args.get('order', 'asc')
+    order = request.args.get('order', 'desc')
     heading = "My Answers"
     
     posts_with_my_replies_query = (
@@ -456,7 +456,7 @@ def api_my_answers_posts():
     """
     API endpoint to fetch posts answered by the user.
     """
-    order = request.args.get('order', 'asc')
+    order = request.args.get('order', 'desc')
 
     query = (
         db.session.query(Posts)
@@ -543,7 +543,7 @@ def career():
     Route to display career preparation posts.
     """
     page = request.args.get('page', 1, type=int)
-    order = request.args.get('order', 'asc')
+    order = request.args.get('order', 'desc')
     heading = "Career Preparation"
     
     career_posts_query = Posts.query.filter_by(career_preparation=True, is_draft=False).order_by(
@@ -563,7 +563,7 @@ def uni_preparation():
     Route to display unit preparation posts.
     """
     page = request.args.get('page', 1, type=int)
-    order = request.args.get('order', 'asc')
+    order = request.args.get('order', 'desc')
     heading = "Unit Preparation"
     
     uni_preparation_posts_query = Posts.query.filter_by(career_preparation=False, is_draft=False).order_by(
@@ -583,7 +583,7 @@ def drafts():
     Route to display draft posts.
     """
     page = request.args.get('page', 1, type=int)
-    order = request.args.get('order', 'asc')
+    order = request.args.get('order', 'desc')
     heading = "My Draft Posts"
     
     user_drafts_query = Posts.query.filter_by(author_id=current_user.id, is_draft=True).order_by(

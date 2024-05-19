@@ -29,7 +29,7 @@
             {% endif %}
             
             <!-- Display existing replies -->
-            <h2>Replies</h2>
+            <h2>Post your Answer here</h2>
             {% for reply in replies %}
             <div class="card mb-3">
                 <div class="card-body">
@@ -41,7 +41,7 @@
             {% endfor %}
 
             <!-- Reply form -->
-            <h2>Your Answer</h2>
+    
             <form method="post">
                 {{ form.hidden_tag() }}
                 <div class="mb-3">

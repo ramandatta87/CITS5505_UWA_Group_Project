@@ -1060,13 +1060,20 @@
     }
 
     .col-md-9 h1 {
-      background-color: lightskyblue;
-
+      background-color: skyblue;
+      color: white;
       padding: 30px;
       text-align: center;
       font-size: 35px;
     }
 
+    .welcome p {
+      color:lightskyblue;
+      padding: 0px;
+      text-align: center;
+      font-size: 15px;
+      letter-spacing: 7px;
+    }
 
     .col-md-10 {
       -ms-flex: 0 0 83.333333%;
@@ -4625,6 +4632,10 @@
     background-color: rgba(0, 0, 0, 0.03);
     border-bottom: 1px solid rgba(0, 0, 0, 0.125);
   }
+
+  .card .card-header {
+    color: deepskyblue;
+  }
   
   .card-header:first-child {
     border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;
@@ -5368,6 +5379,11 @@
     background-color: #fff;
     border: 1px solid rgba(0, 0, 0, 0.125);
   }
+
+  #posts-list .list-group-item h5 a{
+    color: deepskyblue;
+  }
+
   
   .list-group-item:first-child {
     border-top-left-radius: 0.25rem;
