@@ -15,9 +15,9 @@ This web application is primarily designed as a learning Q&A and career preparat
 ### 1. User Account Management
 Allow users to create accounts, log in, and log out, manage their profiles, and reset password.
 #### Create Account(Sign up)
-
+![sign up](./Readme_images/login.png)
 #### Log in the account
-Readme_images\login.png
+![log in](./Readme_images/login.png)
 #### Remeber me
 If users click the "remeber me" box, the user will keep logging in current account except the user logs out the account.
 
@@ -26,13 +26,33 @@ If users click the "remeber me" box, the user will keep logging in current accou
 #### Manage the profile
 
 
-
-
-
 ### 2. Question Posting and Editing
-Users can post new questions and edit/update existing ones.
-### 3.	Question Categorization and Tagging
-Allow questions to be categorized by topic and tagged for more precise classification, making it easier for other users to find relevant questions.
+Users can post new questions and edit/update existing ones. Users can also save an unfinished question as a draft, and edit/post it in my draft posts.
+#### Question posting
+This form allows users to submit questions on the web application. It features several fields that need to be filled out before submission:
+- **Title**: The title of the question users wish to ask.
+- **Tag**: Relevant tags to categorize the question, which help in navigating and searching for questions within the system.
+- **Question Type**: Users can select between two types of questions:
+  - `Unit Question` - Pertaining to specific units or modules in a course.
+  - `Career Preparation` - Questions aimed at career advice or professional growth.
+- **Content**: The main text area where users can type the content of their question. The text editor supports various formatting options like bold, italic, list, quote, and code formatting.
+![Quesion post](./Readme_images/Question_posting.png)
+
+#### View and reply question users have post
+In the "My Posts" section of the web application, users can view their previously posted questions and respond to posts from other users. Each post is displayed with relevant details such as the title, tag, and the author's name, along with the date it was posted. Users can also enter replies to any post viewed.
+Upon navigating to the "My Posts" section, users are presented with a list of their questions. Each question is displayed in a box that includes:
+- **Title**: Clearly displayed at the top.
+- **Tag**: Shows the categorization tag for quick reference.
+- **Author**: The name of the user who posted the question.
+- **Date Posted**: The specific date the question was posted.
+![my post](./Readme_images/mypost.png)
+
+When a user clicks on a question, they are taken to a detailed view where they can read the full content of the question and see existing replies. Below the replies section, there is an input area where users can type their answer:
+- **Your Answer**: A text box where users can write a reply to the question.
+- **Submit Button**: After typing their response, users can submit it by clicking this button.
+![reply my post](./Readme_images/reply_my_post.png)
+
+
 ### 4.	Answers and Comments
 Enable users to provide answers and comments on questions to share knowledge and experiences.
 ### 5. Voting and Sorting
