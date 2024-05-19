@@ -11,7 +11,7 @@
 {% endfor %}
 
 <h1>Reply to: {{ post.title }}</h1>
-<br/>
+<br>
 <div class="shadow p-3 mb-5 bg-body rounded">
     <form method="POST" action="{{ url_for('main.reply', post_id=post.id) }}">
         {{ form.hidden_tag() }}

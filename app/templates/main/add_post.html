@@ -11,72 +11,59 @@
 {% endfor %}
 
 <div class="card p-3" style="margin-top: -10px;">
-
-
-
-    
     <!-- Posts List -->
-<div class="row">
-
-    {% include "includes/sidebar.html" %}
-    
-<div class="col-md" style="border: 1px solid #ccc;">
-
-
-<h1 style="background-image: linear-gradient(to right, blue, lightgreen); padding: 20px; color: white; text-align: center;">Ask Your Question</h1>
-    <br/>
-    <p>Fill out the form below to post a question.</p>
-<br/>
-
-    <form method="POST">
-        {{ form.hidden_tag() }}
- 
-        <!-- Title Field -->
-        <div class="mb-3">
-            {{ form.title.label(class="form-label", for="title") }}
-            {{ form.title(class="form-control", id="title") }}
-        </div>
- 
-        <!-- Tag Field -->
-        <div class="mb-3">
-            {{ form.tag.label(class="form-label", for="tag") }}
-            {{ form.tag(class="form-control", id="autocomplete") }}
-        </div>
- 
-        <!-- Question Type Field -->
-        <div class="mb-3">
-            {{ form.question_type.label(class="form-label") }}
-            {% for subfield in form.question_type %}
-                <div class="form-check">
-                    {{ subfield(class="form-check-input") }}
-                    <label class="form-check-label" for="{{ subfield.id }}">{{ subfield.label.text }}</label>
+    <div class="row">
+        {% include "includes/sidebar.html" %}
+        <div class="col-md" style="border: 1px solid #ccc;">
+            <h1 style="background-image: linear-gradient(to right, blue, lightgreen); padding: 20px; color: white; text-align: center;">Ask Your Question</h1>
+            <br>
+            <p>Fill out the form below to post a question.</p>
+            <br>
+            <form method="POST">
+                {{ form.hidden_tag() }}
+                <!-- Question Type Field -->
+                <div class="mb-3">
+                    {{ form.question_type.label(class="form-label") }}
+                    <div class="d-flex">
+                        {% for subfield in form.question_type %}
+                            <div class="form-check form-check-inline">
+                                {{ subfield(class="form-check-input") }}
+                                <label class="form-check-label" for="{{ subfield.id }}">{{ subfield.label.text }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
-            {% endfor %}
+                <!-- Title Field -->
+                <div class="mb-3">
+                    {{ form.title.label(class="form-label", for="title") }}
+                    {{ form.title(class="form-control", id="title") }}
+                </div>
+                <!-- Tag Field -->
+                <div class="mb-3 mb-4" style="position: relative;">
+                    {{ form.tag.label(class="form-label", for="tag") }}
+                    {{ form.tag(class="form-control", id="autocomplete") }}
+                </div>
+                <br>
+                <!-- Content Field -->
+                <div class="mb-3 mt-4">
+                    {{ form.content.label(class="form-label", for="content") }}
+                    {{ form.content(class="form-control", id="content", rows="5") }}
+                </div>
+                <!-- Draft and Submit Buttons -->
+                <div class="mb-3">
+                    {{ form.submit(class="btn btn-secondary", id="submit") }}
+                    <a href="{{ url_for('main.posts') }}" class="btn btn-danger">Cancel</a>
+                </div>
+                <!-- Cancel Button -->
+                <div class="mb-3 float-right" style="width: 15%; margin-top: -60px;">
+                    {{ form.draft(class="btn btn-warning", id="draft") }}
+                </div>
+            </form>
+            {{ ckeditor.load() }}
+            {{ ckeditor.config(name='content') }}
         </div>
- 
-        <!-- Content Field -->
-        <div class="mb-3">
-            {{ form.content.label(class="form-label", for="content") }}
-            {{ form.content(class="form-control", id="content", rows="5") }}
-        </div>
- 
-        <!-- Draft and Submit Buttons -->
-        <div class="mb-3">
-            {{ form.submit(class="btn btn-secondary", id="submit") }}
-            <a href="{{ url_for('main.posts') }}" class="btn btn-danger">Cancel</a>
-           
-         
-        </div>
-       
-        <!-- Cancel Button -->
-        <div class="mb-3 float-right" style="width: 15%; margin-top: -60px;">
-            {{ form.draft(class="btn btn-warning", id="draft") }}
-        </div>
-    </form>
-    {{ ckeditor.load() }}
-    {{ ckeditor.config(name='content') }}
+    </div>
 </div>
-</div></Div>
 {% endblock %}
  
 {% block scripts %}
@@ -86,6 +73,12 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <!-- Include the autocomplete script -->
 <script src="{{ url_for('static', filename='js/autocomplete.js') }}"></script>
+
+<!-- Custom CSS for positioning -->
+<style>
+    .ui-autocomplete {
+        z-index: 1050; /* Ensure the dropdown appears above other elements */
+    }
+</style>
  
 {% endblock %}
- 

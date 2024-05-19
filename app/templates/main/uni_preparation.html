@@ -14,21 +14,15 @@
 
 
     <!-- Posts List -->
-<Div class="row">
+<div class="row">
 
     {% include "includes/sidebar.html" %}
     
 <div class="col-md-9">
-
-
-
-
-
-
-
-<h1>Uni Preparation Posts</h1>
-<br/>
-<div class="">
+    <h1>Unit Preparation Posts</h1>
+</div>
+<br>
+<div>
     <!-- Posts List -->
     <ul class="list-group" id="posts-list">
         {% for post in posts %}
@@ -49,7 +43,7 @@
     {{ ckeditor.load() }}
     {{ ckeditor.config(name='content') }}
 </div>
-</div></Div></div>
+
 {% endblock %}
 
 {% block scripts %}
